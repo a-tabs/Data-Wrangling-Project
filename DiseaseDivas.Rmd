@@ -2,7 +2,9 @@
 title: "DiseaseDiva"
 author: "Us"
 date: "10/24/2021"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -79,14 +81,14 @@ We also wanted to utilize the lesson on Natural Language Processing from class i
 Below is the pipeline for our project. It covers our cleaning process for both data sets, our process for working with relational data (with GDC data), how we performed Natural Language Processing on the GDC portal data sets, and what we did for each of our aims. We will be covering each of these points in detail over the course of this paper.
 
 ```{r img-with-knitr, echo=FALSE, fig.align='center', out.width='100%'}
-knitr::include_graphics("~/Downloads/Untitled.png")
+knitr::include_graphics("~/Desktop/Data-Wrangling-Projecgt/Pipeline_Final.png")
 ```
 ##Methods 
 
 
 # GITHUB
 
-We used Github, a version-control software readily available on the web, to collaborate with each other throughout the project and efficiently add our individual contributions to our final paper. We created a repository titled "Data Wrangling Project", which included our final Rmd file (this paper), a copy of our project pipeline image, our custom library package, and all relevant data sets throughout our analysis. We followed a standard protocol for adding and updating changes to our files -- we used the git pull command for updating our files and we used the add, commit, and push commands for adding our individual changes to the repository. Utilizing Github allowed all of our group members to work on our individual aims at our own time and pace while keeping everyone else updated on our individual and overall progress. A link to our repository can be found [here](https://github.com/aiy-wish/Data-Wrangling-Project).
+We used Github, a version-control software readily available on the web, to collaborate with each other throughout the project and efficiently add our individual contributions to our final paper. We created a repository titled "Data Wrangling Project", which included our final Rmd file (this paper), a copy of our project pipeline image, our custom library package, and all relevant data sets throughout our analysis. We followed a standard protocol for adding and updating changes to our files -- we used the git pull command for updating our files and we used the add, commit, and push commands for adding our individual changes to the repository. Utilizing Github allowed all of our group members to work on our individual aims at our own time and pace while keeping everyone else updated on our individual and overall progress. A link to our finals repository can be found [here](https://github.com/a-tabs/Data-Wrangling-Project).
 
 # CUSTOM FUNCTIONS
 Below are our custom functions that will be used throughout our data cleaning and joining processes. 
@@ -99,9 +101,7 @@ Our third and final function `find_nonuniq`, prints out columns in a given data 
 
 Our functions are included below:
 ```{r}
-#install.packages("pracma")
-library(pracma)
-library(DDCustomPkg)
+library(DiseaseDivas)
 
 ## ADD IN FIRST FUNCTION 
 string_NA <- function(data){
@@ -641,7 +641,7 @@ To conduct the analysis we subset the data columns Diagnosis.Age and Tumor.Site 
 
 ```{r}
 age_tumor <- remove_nonuniques[c(4,11)] #subset the data 
-age_tumor
+head(age_tumor)
 summary(unique(age_tumor$Tumor.Site)) #look at unique values for tumor.site 
 ```
 
@@ -701,7 +701,7 @@ Overall, this aim confirms that as men age incidence of prostate cancer increase
 There is no actual natural language in these data sets to process, but the principles and tools of natural language processing can be utilized to extract more information from the data. The second data has four columns corresponding to the AJCC staging classification of each patient in the data set. To help better understand what these classifications mean, we are adding a new column that includes a written description of each of the AJCC staging classifications that are provided. To do this, we can use Regex to identify AJCC stage patterns to match them to their written description. The written descriptions of each stage come from this webpage: https://www.cancer.org/cancer/prostate-cancer/detection-diagnosis-staging/staging.html
 
 ```{r}
-SampleRevised<-read.csv("/Users/alisatvorundunn/Downloads/Data-Wrangling-Project-main 2/SampleRevised.csv")
+SampleRevised<-read.csv("~/Desktop/Data-Wrangling-Project/SampleRevised.csv")
 ```
 
 ```{r}
@@ -779,13 +779,12 @@ sample <- read.csv("~/Downloads/cleanedsample.csv")
 ```{r}
 temp.NA <- sample
 temp.NA[temp.NA == "'--"] <- NA
-temp.NA
 ```
 
 ```{r}
 #changing '-- Null values to NA 
 temp.NA1 <- subset(temp.NA, temp.NA$classification_of_tumor != "NA" & temp.NA$last_known_disease_status !="NA" & temp.NA$tumor_largest_dimension_diameter!="NA")
-temp.NA1
+#temp.NA1
 
 ```
 ```{r}
@@ -863,7 +862,7 @@ print(cols_dups)
 ```{r}
 remove_dups <- joined_data[,-cols_dups]
 dim(remove_dups)
-View(remove_dups)
+
 ## removing some duplicated manually 
 remove_dups[52]<-NULL #removes the ethnicity duplicate 
 remove_dups[52] <- NULL #removes the age duplicate 
