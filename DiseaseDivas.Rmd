@@ -33,7 +33,7 @@ Data was extracted from the cBioPortal, a public cancer genomics site hosted and
 -**Site Sequenced**: site of exome sequencing: Broad or UM (string)
 -**tumor content**: percentage of tumor captured in the biopsy (number)
 
-The National Cancer Institute (NCI) maintains a unified repository of genomic data known as the Genomic Data Commons(GDC). Groundwork for this repository began in June 2015 with nearly 50,000 raw data sequences analyzed by June 2016. This data sharing platform uses an Open-Stack-based private cloud to unite several large-scale cancer genome research programs such as TCGA and OCG. The purpose of this repository is to standardize the data processing of these multi-dimensional datasets by using common bioinformatics pipelines that facilitate direct comparison of the data. 
+The National Cancer Institute (NCI) maintains a unified repository of genomic data known as the Genomic Data Commons(GDC). Groundwork for this repository began in June 2015 with nearly 50,000 raw data sequences analyzed by June 2016. This data sharing platform uses an Open-Stack-based private cloud to unite several large-scale cancer genome research programs such as TCGA and OCG. The purpose of this repository is to standardize the data processing of these multi-dimensional data sets by using common bioinformatics pipelines that facilitate direct comparison of the data. 
 
 More about the National Cancer Institute's Genomic Data Commons can be found [here.](https://gdc.cancer.gov/about-gdc)
 
@@ -81,7 +81,7 @@ We also wanted to utilize the lesson on Natural Language Processing from class i
 Below is the pipeline for our project. It covers our cleaning process for both data sets, our process for working with relational data (with GDC data), how we performed Natural Language Processing on the GDC portal data sets, and what we did for each of our aims. We will be covering each of these points in detail over the course of this paper.
 
 ```{r img-with-knitr, echo=FALSE, fig.align='center', out.width='100%'}
-knitr::include_graphics("~/Desktop/Data-Wrangling-Projecgt/Pipeline_Final.png")
+knitr::include_graphics("~/Desktop/Data-Wrangling-Project/Pipeline_Final.png")
 ```
 ##Methods 
 
@@ -103,14 +103,14 @@ Our functions are included below:
 ```{r}
 library(DiseaseDivas)
 
-## ADD IN FIRST FUNCTION 
+## Convert to NAs function
 string_NA <- function(data){
   data[data == "'--"] <- NA
   return(data)
 }
 
 # Remove a column if two columns are the exact same
-carbon_copy <- function(df){
+carbon.copy <- function(df){
   return(df[!duplicated(as.list(df))])
 }
   
@@ -128,17 +128,24 @@ find_nonuniq <- function(dataset){
 
 We also compiled our functions into a simple library, titled `DiseaseDivas`, which is available on our GitHub repository. We followed methods outlined by Dr. Joshua Levy from class on Thursday, October 14th, 2021. Link to the lecture can be found [here.](https://dartmouth.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=50ab9cd2-72da-4c24-aade-ad8700320d4f)
 
+Below is an example of how to use our library:
+```{r}
+rawdat<- read.csv("~/Desktop/Data-Wrangling-Project/diseasedivadata.csv")
+dim(rawdat) # Check raw data dimensions
+example_dat = DiseaseDivas::carbon.copy(rawdat) # Use library to get rid of duplicate functions
+dim(example_dat) # Check new non-duplicate data frame dimensions
+```
+
 # Extracting the Data from the cBioPortal 
 The first data set was downloaded from the cBioPortal site using the "download clinical data for the selected cases" button extracting all columns. 
 
-The link to the dataset can be found [here.](https://www.cbioportal.org/study/clinicalData?id=prad_su2c_2015)
+The link to the data set can be found [here.](https://www.cbioportal.org/study/clinicalData?id=prad_su2c_2015)
 
 # Cleaning Our Data
-The first dataset was downloaded as a TSV file which required conversion in Excel to a CSV file. After importing the data into Excel using the Import Data From Text tool, the worksheet was saved as a csv file. The raw data contained 150 rows and 20 columns. As a team we worked through the exploratory investigation and cleaning of the data by utilizing GitHub to collaborate on an R Markdown file. 
+The first data set was downloaded as a TSV file which required conversion in Excel to a CSV file. After importing the data into Excel using the Import Data From Text tool, the worksheet was saved as a csv file. The raw data contained 150 rows and 20 columns. As a team we worked through the exploratory investigation and cleaning of the data by utilizing GitHub to collaborate on an R Markdown file. 
 
 ```{r}
 #Load data downloaded from 
-#rawdat <- read.csv("/cloud/project/data/diseasedivadata.csv")
 rawdat<- read.csv("~/Desktop/Data-Wrangling-Project/diseasedivadata.csv")
 ```
 
@@ -165,7 +172,7 @@ Further analysis of the data revealed that several columns were found to have du
 duplicated(complete_dat$Sample.ID)
 ```
 
-Upon cursory glance the Patient ID and Sample ID column appeared to be populated with the exact same values per each row. To confirm this assumption we used the following syntax to check if the values between the two columns were unique. The syntax reads as follows, from the compelete_dat dataframe check if Patient Id is not contained in Sample Id then output the results. 
+Upon cursory glance the Patient ID and Sample ID column appeared to be populated with the exact same values per each row. To confirm this assumption we used the following syntax to check if the values between the two columns were unique. The syntax reads as follows, from the complete_dat data frame check if Patient Id is not contained in Sample Id then output the results. 
 
 ```{r}
 #Check if sample id is dup
@@ -197,12 +204,12 @@ The next step in our analysis was to create a classification system for tumor co
 # 46 - 70 is medium 
 # 71 - 98 is high
 
-# Create and add classification system to dataframe
+# Create and add classification system to data frame
 aim_1_1$TC_level <- as.factor(ifelse(aim_1_1$tumor.content < 46, 'Low',
                      ifelse(aim_1_1$tumor.content < 71, 'Medium', 'High')))
 ```
 
-The next step in our analysis was to group sequencing centers (aka the "Center of sequencing" column) into geographic regions. Sequencing centers in our dataset included Dana-Farber Cancer Institute, Memorial Sloan Kettering Cancer Center, Karmanos Cancer Center, University of Michigan, University of Washington, and the Insitute of Cancer Research & The Royal Marsden. Geographic regions were grouped as shown below: 
+The next step in our analysis was to group sequencing centers (aka the "Center of sequencing" column) into geographic regions. Sequencing centers in our data set included Dana-Farber Cancer Institute, Memorial Sloan Kettering Cancer Center, Karmanos Cancer Center, University of Michigan, University of Washington, and the Insitute of Cancer Research & The Royal Marsden. Geographic regions were grouped as shown below: 
 
 EAST COAST LOCATIONS:
 DFCI (Boston, MA)
@@ -637,7 +644,7 @@ Now that we can compare severity of tumor content directly next to frequency of 
 ## BONUS AIM
 The last aim checks for an association between diagnosis age and tumor site. According to the Cleveland Clinic 1 in 6 men will be diagnosed with prostate cancer during the course of their lifetime. Research from the American Cancer Society suggests that 6 out of 10 cases of prostate cancer are diagnosed among men 65 years or older. As mentioned previously the mean age of diagnosis among this prospective cohort was 67 years of age. Prior research suggests that as men get older their risk of being diagnosed with prostate cancer increases. In addition, the publication in Cell suggests that bone tumors are the most common site of metastatic disease. This aim therefore intends to determine whether these two prior notions hold true among the data in question. 
 
-To conduct the analysis we subset the data columns Diagnosis.Age and Tumor.Site into a dataframe called age_tumor. The numeric index of these columns was 4 and 11 respectively. Before proceeding with any analysis we conducted an exploratory investigation to understand the quantity of unique tumor sites present in the data set along with the spread of age at diagnosis. 
+To conduct the analysis we subset the data columns Diagnosis.Age and Tumor.Site into a data frame called age_tumor. The numeric index of these columns was 4 and 11 respectively. Before proceeding with any analysis we conducted an exploratory investigation to understand the quantity of unique tumor sites present in the data set along with the spread of age at diagnosis. 
 
 ```{r}
 age_tumor <- remove_nonuniques[c(4,11)] #subset the data 
@@ -759,7 +766,7 @@ staging_dat$AJCC_Stage_Description <- ajcc_cols$AJCC_Stage_Description
 
 
 ##Extract the Data from National Cancer Institute 
-We downloaded the second cancer dataset from the National Cancer Institute GDC Data Portal for all the clinical cases including all the columns. 
+We downloaded the second cancer data set from the National Cancer Institute GDC Data Portal for all the clinical cases including all the columns. 
 
 The link can be found [here.](https://portal.gdc.cancer.gov/exploration?cases_size=100&filters=%7B%22op%22%3A%22and%22%2C%22content%22%3A%5B%7B%22op%22%3A%22in%22%2C%22content%22%3A%7B%22field%22%3A%22cases.primary_site%22%2C%22value%22%3A%5B%22prostate%20gland%22%5D%7D%7D%2C%7B%22content%22%3A%7B%22field%22%3A%22cases.project.project_id%22%2C%22value%22%3A%5B%22TCGA-PRAD%22%5D%7D%2C%22op%22%3A%22in%22%7D%2C%7B%22content%22%3A%7B%22field%22%3A%22genes.is_cancer_gene_census%22%2C%22value%22%3A%5B%22true%22%5D%7D%2C%22op%22%3A%22in%22%7D%5D%7D&searchTableTab=cases)
 
@@ -808,29 +815,26 @@ library(tidyverse)
 new_sample <- read.csv("removed_dups.csv")
 new_sample <- subset(new_sample, select=-c(36:39))
 dim(new_sample)
-GDC <- read.csv("Dataset2DD.csv")
+GDC <- read.csv("data set2DD.csv")
 GDC <- rename(GDC, case_id=Case.UUID)
 dim(GDC)
 
 dataset_1 <- remove_nonuniques
 dataset_1 <- rename(dataset_1, ID=Patient.ID)
 dataset_1 <- rename(dataset_1,Age=Diagnosis.Age)
-dataset_1sql <- sqldf("SELECT ID, case when Age >=40 and Age <= 59 then '40-59' when Age >59 and Age <= 69 then '60-69'when Age >69 and Age <= 79 then '70-79' else '80+' end  FROM dataset_1 GROUP BY ID,
+dataset_1sql <- sqldf("SELECT ID, case when Age >=40 and Age <= 59 then '40-59' when Age >59 and Age <= 69 then '60-69'when Age >69 and Age <= 79 then '70-79' else '80+' end  FROM data set_1 GROUP BY ID,
                       case when Age >=40 and Age <= 59 then '40-59' when 
                       Age >59 and Age <= 69 then '60-69'when
                       Age >69 and Age <= 79 then '70-79' 
                       else '80+' end")
 names(dataset_1sql)[2]<-"agegrp"
-join_data1_sql <- sqldf("SELECT * FROM dataset_1 JOIN dataset_1sql on dataset_1.ID=dataset_1sql.ID")
+join_data1_sql <- sqldf("SELECT * FROM data set_1 JOIN data set_1sql on data set_1.ID=data set_1sql.ID")
 
 #age check 
 age_ds1 <- select(join_data1_sql,"Age","agegrp")
 
 joined_data <- sqldf("SELECT * FROM new_sample JOIN GDC on new_sample.case_id=GDC.case_id")
-view(joined_data)
 dim(joined_data)
-
-
 ```
 
 extracting numeric digits as text mining 
@@ -878,7 +882,6 @@ dataset_2sql <- sqldf("SELECT ID, case when Age >=40 and Age <= 59 then '40-59' 
                       else '80+' end")
 names(dataset_2sql)[2]<-"agegrp"
 dataset_2$agegrp <- cbind(dataset_2sql[2])
-view(dataset_2)
 
 ```
 
@@ -895,9 +898,9 @@ Our analysis aimed to understand the associations between patient characteristic
 
 # Next Steps
 
-After joining the two datasets from GDC via SQL, we noticed that our initial dataset from cBioPortal and the new dataset both had data on patient's age at diagnosis as well as whether the patient had prior treatment. As a basic step to check similarities between patients across both datasets, we plotted the distributions of age at diagnosis for both datasets.
+After joining the two data sets from GDC via SQL, we noticed that our initial data set from cBioPortal and the new data set both had data on patient's age at diagnosis as well as whether the patient had prior treatment. As a basic step to check similarities between patients across both data sets, we plotted the distributions of age at diagnosis for both data sets.
 ```{r}
-# Plot age at diagnosis distributions for both datasets
+# Plot age at diagnosis distributions for both data sets
 ggplot(data.frame(dataset_2), aes(x=Age)) +
   geom_histogram(colour="black",fill="lightskyblue") +theme_classic()
   
@@ -908,10 +911,11 @@ ggplot(data.frame(dataset_1), aes(x=Age)) +
 summary(dataset_1$Age)
 
 ```
-After assessing the plots above, we noticed that the mean age at diagnosis for our first dataset (cBioPortal) was slightly later than the mean age at diagnosis for our second dataset (GDC). After realizing this, we wanted to see if patients from the cBioPortal had higher rates of prior treatment status than patients from the GDC data. In order to check this while stratifying for age groups, we plotted prior treatment status for patients from each dataset based on our age groups. 
+
+After assessing the plots above, we noticed that the mean age at diagnosis for our first data set (cBioPortal) was slightly later than the mean age at diagnosis for our second data set (GDC). After realizing this, we wanted to see if patients from the cBioPortal had higher rates of prior treatment status than patients from the GDC data. In order to check this while stratifying for age groups, we plotted prior treatment status for patients from each data set based on our age groups. 
 
 ```{r}
-# Plot prior treatment status for both datasets
+# Plot prior treatment status for both data sets
 join_data1_sql[1] <- NULL
 freq_1treat <-join_data1_sql %>% group_by(agegrp,Prior.Treatment) %>% summarise(Freq=n())
 dat2 <- dataset_2
@@ -938,7 +942,8 @@ ggplot(data.frame(freq_2treat), aes(x=AGEgrp, y=Freq)) +
   theme_classic()
 
 ```
-The first thing we noticed is that these graphs are slightly misleading since we are looking at frequencies instead of proportions. The cBioPortal dataset frequencies range from 0-40, while the GDC dataset frequencies range from 0 to >200. Let's try to make these graphs more comparable. 
+
+The first thing we noticed is that these graphs are slightly misleading since we are looking at frequencies instead of proportions. The cBioPortal data set frequencies range from 0-40, while the GDC data set frequencies range from 0 to >200. Let's try to make these graphs more comparable. 
 
 ```{r}
 # Make proportions
@@ -970,7 +975,7 @@ ggplot(data.frame(freq_2treat), aes(x=AGEgrp, y=Prop)) +
   theme_classic() + ylim(0, 0.5)
 
 ```
-Great! Now that we have the proportions and equal y axis ranges, we can see that the gap between having prior treatment versus no prior treatment is relatively smaller in the patients from the first dataset compared to patients from the second data set. Additionally, the proportion of patients who received prior treatment in the first dataset seems to be higher across all age groups compared to the second data set. 
+Great! Now that we have the proportions and equal y axis ranges, we can see that the gap between having prior treatment versus no prior treatment is relatively smaller in the patients from the first data set compared to patients from the second data set. Additionally, the proportion of patients who received prior treatment in the first data set seems to be higher across all age groups compared to the second data set. 
 
 This would be a great place to start further analysis if we had more time. We could look more into how prior treatment affects diagnosis age, if prior treatment has been linked to later diagnosis age, and where we would be able to find more data to test this association. One thing to note is that the first data set's patients were specifically studied on prior Taxane treatment, while the patients in the second data set did not have a specific treatment mentioned. So, we could also look at Taxane treatment effectiveness in preventing prostate cancer versus other treatments. In addition to investigating diagnosis age's relationship to prior treatment status, we had also noticed that the second data set had a "vital status" column which gives us information on the survival status of the patient. This information was missing from our first data set, so another great next step would be to track the incidence of disease in our second data set (from GDC), and by using our vital status column, we would calculate the patient mortality ratio for the GDC data set. 
 
@@ -978,5 +983,6 @@ This would be a great place to start further analysis if we had more time. We co
 # Limitations
 Though we were able to derive several conclusions from our data sets, there were a few limitations we faced. For starters, the data set we got from cBioPortal did not have well-defined variables or information on certain variables were calculated, what the units of measurements were, etc. For example, we initially struggled to find information on how tumor content and mutation count were measured, what the units of measurements were, and what ranges of each measurement were considered significant. When we tried to do some background research through search engines such as Google, we weren't able to find any helpful information, which leads us to our second limitation: prostate cancer data is very niche, and there were not many resources readily available for us to use to get a better understanding on some of the variables we were dealing with. Nevertheless, after reading through the data set's attached paper for understanding tumor content and looking at other academic papers to better understand how mutation count works, we were able to successfully interpret our variables of interest.
 
-# Looking forward - clinical implications
-TO-DO
+# Looking Forward - Clinical Implications
+If we were to use our analysis to make conclusions about the clinical implications of the prostate cancer data we analyzed throughout this project, our first piece of advice would be to further study associations between sequencing site and exposure status, along with prior treatment status and exposure status since we obtained significant results when studying these associations. Additionally, it would be worth looking into how age plays into certain factors such as prior treatment status and tumor site.
+
