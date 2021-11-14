@@ -73,6 +73,8 @@ The link to the dataset can be found [here.](https://www.cbioportal.org/study/cl
 ##Cleaning Our Data
 The first dataset was downloaded as a TSV file which required conversion in Excel to a CSV file. After importing the data into Excel using the Import Data From Text tool, the worksheet was saved as a csv file. The raw data contained 150 rows and 20 columns. As a team we worked through the exploratory investigation and cleaning of the data by utilizing GitHub to collaborate on an R Markdown file. 
 
+Please refer to our GitHub repository for the link to our csv data for the first dataset. It is labelled `diseaseddivadata`. 
+
 ```{r}
 #Loaded the data as a CSV into the R Markdown file 
 rawdat<- read.csv("~/Documents/Dartmouth/Fall 2021/QBS 181/group project/Data .csv")
@@ -146,10 +148,12 @@ According to the aforementioned summary and unique command, 20 unique tumor site
 ```{r}
 summary(age_tumor$Diagnosis.Age)
 ```
-Given the minimum age at diagnosis was 40 and the maximum age at diagnosis was 85 we needed to come up with a way to age-stratify the data in order to compare the various tumor sites with age at diagnosis. TAn article published in the [British Journal of Cancer](https://www.nature.com/articles/bjc2013268#Tab1) described a methodology for stratifying age within a population based study investigating prostate cancer. The researchers stratified age according to the following groups "40-59", "60-69", "70-79" and "80+ years". Since this was a validated study we employed the same age-stratified bins for our analysis. 
+Given the minimum age at diagnosis was 40 and the maximum age at diagnosis was 85 we needed to come up with a way to age-stratify the data in order to compare the various tumor sites with age at diagnosis. An article published in the [British Journal of Cancer](https://www.nature.com/articles/bjc2013268#Tab1) described a methodology for stratifying age within a population based study investigating prostate cancer. The researchers stratified age according to the following groups "40-59", "60-69", "70-79" and "80+ years". Since this was a validated study we employed the same age-stratified bins for our analysis. 
+
+Using the `tidyverse` package we employed several `ifelse` statements to group the ages into the various aforementioned age strata. All values were grouped into their respective bins with the final clause indicating that values that did not fall into these specified ranges should be classified as `NA`. 
 
 ```{r}
-library(tidyverse) #load tidyverse to assist in analysis 
+library(tidyverse) 
 #grouping the age by the BJC age-stratified bins using ifelse statements 
 age_tumor$agegrp <- ifelse(age_tumor$Diagnosis.Age >= 40 & age_tumor$Diagnosis.Age <=59, "40-59",
                   ifelse(age_tumor$Diagnosis.Age > 59 & age_tumor$Diagnosis.Age <= 69, "60-69",
@@ -157,12 +161,12 @@ age_tumor$agegrp <- ifelse(age_tumor$Diagnosis.Age >= 40 & age_tumor$Diagnosis.A
                                 ifelse(age_tumor$Diagnosis.Age >79,"80+", NA))))
 ```
 
-After stratifying the data, we created a summary table to assess the aggregated counts of tumors by site grouped by age. 
+After stratifying the data, we created a summary table utilizing the packages `dplyr` and `gtsummary` to assess the aggregated counts of tumors by site grouped by age. 
 
 ```{r}
-library(dplyr) #load dplyr to use gtsummary 
-#install.packages("gtsummary") #in order to create the graph you may need to install the gtsummary pkg
-library(gtsummary) #load gtsummary to create the summary table 
+library(dplyr) 
+#install.packages("gtsummary") 
+library(gtsummary)
 age_tumor %>% 
   select(Tumor.Site, agegrp) %>%
   tbl_summary(by = agegrp, label = Tumor.Site ~ "Tumor Site") %>% #develop the table based on the selected input
@@ -172,13 +176,15 @@ As evidenced by the output of the table, several of the aggregate counts of tumo
 
 We found the quantities of the aggregate counts for the following tumor sites: Bone, Liver, Lymph Node, Prostate and Soft Tissue to be interesting so we further subsetted the data to explore the distribution of tumors. Additionally, we wanted to further assess whether bone, as mentioned earlier, was indeed the site of greatest metastatic disease. 
 
+To do this we grouped the data by age group and tumor site to create a count of tumors by age. Then we filtered for those cases for which the frequency of tumors was greater than 1. Using the `ggplot2` package we created a clustered bar plot to compare the distribution of those five tumors by age group. The graph was formatted with the `viridis` package to create the color scheme displayed below. Axes labels and legend titles were added as appropriate. 
+
 ```{r}
 #calculate the frequency of tumors by age group 
 freq <- age_tumor %>% group_by(agegrp,Tumor.Site) %>% summarise(Freq=n())
-freq <- rename(freq, "Count of Tumors"=Freq) #rename the frequency column 
+freq <- rename(freq, "Count of Tumors"=Freq) 
 freq_gt1 <-freq[which(freq$`Count of Tumors`>1),] #subset the data to include the five columns of interest 
-library(ggplot2) #load in ggplot to create graphical summary 
-library(viridis) #load in viridis for pretty color palette 
+library(ggplot2) 
+library(viridis) 
 #create a bar chart of the data 
 ggplot(freq_gt1, aes(agegrp,`Count of Tumors`)) +
   labs(x="Age Grouped by BJC paper levels", y="Frequency of Tumors") +
@@ -197,6 +203,8 @@ We downloaded the second cancer dataset from the National Cancer Institute GDC D
 The link can be found [here.](https://portal.gdc.cancer.gov/exploration?cases_size=100&filters=%7B%22op%22%3A%22and%22%2C%22content%22%3A%5B%7B%22op%22%3A%22in%22%2C%22content%22%3A%7B%22field%22%3A%22cases.primary_site%22%2C%22value%22%3A%5B%22prostate%20gland%22%5D%7D%7D%2C%7B%22content%22%3A%7B%22field%22%3A%22cases.project.project_id%22%2C%22value%22%3A%5B%22TCGA-PRAD%22%5D%7D%2C%22op%22%3A%22in%22%7D%2C%7B%22content%22%3A%7B%22field%22%3A%22genes.is_cancer_gene_census%22%2C%22value%22%3A%5B%22true%22%5D%7D%2C%22op%22%3A%22in%22%7D%5D%7D&searchTableTab=cases)
 
 ##Excel Cleaning for Second Data Set 
+The GDC portal website provided both a cleaned and uncleaned version of their prostrate cancer data. The cleaned data mirrors what can be found on their visualization dashboard describing 493 patients with 24 data points while the uncleaned  version contains many more clinical parameters such as clinical stages of the tumor, days to last follow up, and treatment. Both GDC datasets are more robust in their capture of the clinical parameters related to prostate cancer in contrast with the cBioPortal data previously analyzed. This indicates that since 2015 when the Cell paper was published, the observation and recording of tumor data related to prostrate cancer has significantly increased allowing researchers to provide more insight into the manifestation of disease. For this portion of our analysis we downloaded both datasets as we were interested in wrangling the data and discerning the overlap between the two datasets. We first started by cleaning the clinical data set with the abundance of parameters.   
+
 The data was downloaded as a TSV file so it needed to be imported into Excel to change the format to a CSV or .XLSX file. The raw data contained  960 rows and 156 columns. Upon further investigation it was evident that several of the columns were empty or had values missing. In order to determine the columns with no data present along with those which had missing values we used the Filter tool in Excel. Missing values were those marked as '-- in the cells. We developed a key for the missing values called "Key for Missing Values Columns". 
 
 Based on the assessment where we developed the key of the missing values we determined that the raw data contained 112 empty columns for which no data was available and 33 columns with missing values. The 112 empty columns were then removed from the analysis by simple deletion in Excel and a new sheet was created, "Sample". This new sheet "Sample" contained 44 columns. 
@@ -205,58 +213,162 @@ Further investigation of the new "Sample" data indicated that some rows were shi
 
 Similarly the "treatment_type" column values were shifted to the right but also broken up into values of "Radiation Therapy/Pharmaceutical Therapy" and "NOS". To fix this issue we concatenated the values for the therapy and NOS in a new column, column AS. We then named this column "treatment_type".
 
-After concatenating the values we copied the data from "Sample Revised" to a new worksheet called "cleaned_sample". In this dataset we noticed that after shifting the rows five columns were shown to be empty. Thus we removed the five columns: secondary_gleason_grade, synchronous_malignancy, tumor_grade, year_of_diagnosis and treatment_or_therapy.  We exported this data as a CSV file to then continue our analysis of the missing values in R.  
+After concatenating the values we copied the data from "Sample Revised" to a new worksheet called "cleaned_sample". In this dataset we noticed that after shifting the rows five columns were shown to be empty. Thus we removed the five columns: secondary_gleason_grade, synchronous_malignancy, tumor_grade, year_of_diagnosis and treatment_or_therapy.  We exported this data as a CSV file to then continue our analysis of the missing values in R.
 
+For our final Excel file with the metadata and the various sheets please refer to our GitHub repository. You will find the .xlsx file under the title `clinical data from NCI`. 
+
+##Missing Value Pipeline 
+The following flowchart details the "Missing Value Pipeline" which outlines the sequence of steps taken to address the missing values present in the "uncleaned" version of the GDC portal data. Some of the steps have been previously discussed as they were done as part of the cleaning of the dataset in Excel. The remainder relating to "R" will be discussed in further detail below. 
+
+```{r img-with-knitr, echo=FALSE, fig.align='center', out.width='100%'}
+knitr::include_graphics("~/Downloads/MissingValueFlowchart.png")
+```
 ##Dealing with Missing Values 
-As mentioned previously, this GDC portal "uncleaned" dataset contained 33 columns with missing values. To be able to adequately analyze the data we need to deal with these missing value strings. First we began by exporting our cleaned data sample from Excel into R. 
+As mentioned previously, the GDC portal "uncleaned" dataset contained 33 columns with missing values. To be able to adequately analyze the data we need to deal with these missing value strings. First we began by exporting our cleaned data sample as a csv file from Excel. Then subsequently we imported the data into R. 
 
 ```{r}
 sample <- read.csv("cleanedsample.csv")
 ```
 
-Next, we recoded the string values representative of missing values to NAs using the direct substituion with Base R. 
-
-```{r}
-temp.NA <- sample
-temp.NA[temp.NA == "'--"] <- NA
-temp.NA
-```
-A cursory scan revealed that the strings were indeed changed to NA values within the dataset. 
+Next, we recoded the string values representative of missing values to NAs using a custom function that searched for each value of '-- and replaced it with `NA`. The function was applied to the sample dataset imported above and saved to a new dataframe called `temp.NA`. 
 
 ```{r}
 #changing '-- Null values to NA 
-temp.NA1 <- subset(temp.NA, temp.NA$classification_of_tumor != "NA" & temp.NA$last_known_disease_status !="NA" & temp.NA$tumor_largest_dimension_diameter!="NA")
-temp.NA1
+string_NA <- function(data){
+data[data == "'--"] <- NA
+return(data)
+}
 
+temp.NA <- string_NA(sample)
 ```
+A cursory scan revealed that the strings were indeed changed to NA values within the dataset. However it was apparent that across several rows there were `NA` values present concurrently across various columns. To address this issue we therefore subsetted the data conditionally using the subset function based on whether `NA` values were present simultaneously across all three of the following columns:`classification of tumor`, `last known disease status`and `tumor largest dimension diameter`. 
+
 ```{r}
-#explored the relationship between the missing variables sorted by Case ID 
+#subsetting data to remove specific rows 
+temp.NA1 <- subset(temp.NA, temp.NA$classification_of_tumor != "NA" & temp.NA$last_known_disease_status !="NA" & temp.NA$tumor_largest_dimension_diameter!="NA")
+dim(temp.NA)
+dim(temp.NA1)
+```
+BY subsetting the rows from the `temp.NA` dataframe we removed 26 rows in which `NA` values were present across the three afroementioned columns. The `NA` values that are now left are column dependent rather than case dependent. Several `NA` values still remain however simply removing the columns is not effective given that those values that are populated within the column are important. For instance the majority of the `days to death` column is populated with `NA` values however lines 131 and 132 have the value `146` for the days of death. This is important information in determining how many days elapsed between diagnosis and death. 
+
+To further visually explore the relationship between the missing variables and their respective CaseIDs we created a matrixplot using the package `VIM`. This graph shows black and white variables indicating the values present in each column followed by red demarcations indicating the missing variables. Notice the three red columns highlighted here. They correspond to `days to death`, `year of death`, and `treatment type`. Many columns towards the middle of the graph also seem to highlight several missing values. Those columns correspond to ratings for the clinical cancer stage of tumors, regional nodes and metastases. As demonstrated by this graph those three columns `days to death`, `year of death`, and `treatment type` uniformly are shown to have missing values however the clinical cancer stage columns intermittently illustrate missing values relative to each respective CaseID. 
+
+```{r}
 library(VIM)
 matrixplot(temp.NA1,sortby=1)
-
 ```
+We further investigated how one of the columns illustrated above with the missing values compared to CaseID. Using the `VIM` package again we created a margin plot to observe how the missing values in `days to last folluw up` (column 20) compared with each case. As depicted below, the column had 16 missing values with a fairly random scatter for the observed values shown in blue. The red values however seem to be concentrated towards the earlier and latter cases with the distribution being skewed for the red boxplot, in contrast to the blue boxplot for CaseID.  
 
 ```{r}
-#created a margin plot to observe how the missing values in days to last follow up comapre with each case 
 marginplot(temp.NA1[,c(1,20)])
+```
+## Natural Language Processing
+The opportunities to employ natural language processing (NLP) in this dataset were limited, but the principles and tools of NLP were utilized to extract more information from the data. The second data, the GDC portal clinical data, had four columns corresponding to the AJCC staging classification of each patient in the data set. To help better understand what these classifications meant, we added a new column that included a written description of each of the AJCC staging classifications provided. To do this, we used Regex to identify AJCC stage patterns to match them to their written description. The written descriptions of each stage come from this [webpage.](https://www.cancer.org/cancer/prostate-cancer/detection-diagnosis-staging/staging.html) 
 
+In order to analyze the data with the NLP principles we used the package `stringr`. First we subsetted the data into the four relevant columns, `ajcc_clinical_m`, `ajcc_clinical_t`, `ajcc_pathologic_n`, and `ajcc_pathologic_t`. This was saved to the dataframe `ajcc cols`. Each column corresponds to a clinical assessment of a particular site in relation to the clinical stage of cancer or prognosis.`ajcc_clinical_m` relates to the extent of the distant metastases for the cancer while  `ajcc_clinical_t` relates to the extent of the primary cancer.  `ajcc_pathologic_n` describes the stage of the cancer based on the nodes and `ajcc_pathologic_t` describes the stage of the cancer based on the primary tumor. 
+
+```{r}
+library(stringr)
+staging_dat <- sample
+ajcc_cols <- staging_dat %>% select(c("ajcc_clinical_m", "ajcc_clinical_t", "ajcc_pathologic_n", "ajcc_pathologic_t"))
 ```
 
-Here we removed the aforementioned columns that split the therapy and NOS which corresponded to columns AK-AN
+Next we combined the four aforementioned classifier columns into one string. We removed mention of the string placeholder, '--,  used to indicate missing values by employing the `str_remove` function. This caused some of combined strings to only contain three values rather than four.  
 
+```{r}
+#Combine classifiers into one string
+ajcc_cols$combined <- str_c(ajcc_cols$ajcc_clinical_m, ajcc_cols$ajcc_clinical_t, ajcc_cols$ajcc_pathologic_n, ajcc_cols$ajcc_pathologic_t, sep = " ")
 
+#Take out effective NAs
+ajcc_cols$combined <- str_remove(ajcc_cols$combined, "('--)++")
+```
 
+After combining the strings we created a vector of the `classificiations` as described in the AJCC staging classifications website link provided above. Each classification accounts for how the cancer was presented in the lymph nodes or elsewhere in the body. These values `N0` and `M1` shown in the descriptions below are available in our dataset from the `ajcc_clinical_m` and the `ajcc_pathologic_n` columns.
+
+```{r}
+#Classification descriptions (from website given above)
+classifications = c("The cancer has not spread to nearby lymph nodes or elsewhere in the body. The Grade Group is 1 , and the PSA level is less than 10.",
+                  "The cancer has not spread to nearby lymph nodes [N0] or elsewhere in the body [M0]. The Grade Group is 1. The PSA level is at least 10 but less than 20.",
+                  "The cancer has not spread to nearby lymph nodes [N0] or elsewhere in the body [M0]. The Grade Group is 2. The PSA level is less than 20.",
+                  "It has not spread to nearby lymph nodes [N0] or elsewhere in the body [M0]. The Grade Group is 1 to 4, and the PSA can be any value.",
+                  " The cancer has spread to nearby lymph nodes [N1] but has not spread elsewhere in the body [M0]. The Grade Group can be any value, and the PSA can be any value.",
+                  "It has spread to other parts of the body, such as distant lymph nodes, bones, or other organs [M1]. The Grade Group can be any value, and the PSA can be any value.",
+                  "Not classified")
+```
+
+We then created a vector of the classifications for the clinical and pathologic information contained in our dataset that corresponded to each unique classification given above. 
+
+```{r}
+#Patterns to identify classification from AJCC info
+regs = c("M0.T[0|2a].*N0", "M0.T[12][abc].*N0", "M0.T[12].N0", "M0.T[34].N0", "M0.T.*N1", "M1.T.*N.*", ".*")
+```
+
+Next, we grouped the data according to each of the numeric classifications assigned in the previous step. To do this we used the `which` function along with the `grepl` function to find the position or index for which the classification of interest was true.  For example, the first group `M0.T[0|2a].*N0` defined in the `regs` vector above, was used to classify 222 of the individuals. The logical positions from the `ajcc cols` combined data for the first five individuals were 1,2,13,14,15. 
+
+```{r}
+#Label row indices with groups
+group1psa10 <- which(grepl(regs[1], ajcc_cols$combined))
+group1psa20 <- which(grepl(regs[2], ajcc_cols$combined))
+group2psa20 <- which(grepl(regs[3], ajcc_cols$combined))
+groups14 <- which(grepl(regs[4], ajcc_cols$combined))
+nodegroup <- which(grepl(regs[5], ajcc_cols$combined))
+metastizedgroup <- which(grepl(regs[6], ajcc_cols$combined))
+nogroup <- which(grepl(regs[7], ajcc_cols$combined))
+```
+
+Once grouping of the data based on the numeric classifications was complete we merged the text description of the AJCC clinical stage from `classifications` with the `ajcc cols` dataframe. This added a sentence description that interpreted the numeric clinical stage. In the output below notice how the sentences are structured. 
+
+```{r}
+#Create a column containing group description
+ajcc_cols$AJCC_Stage_Description <- ajcc_cols$combined
+
+ajcc_cols$AJCC_Stage_Description[nogroup] <- classifications[7]
+ajcc_cols$AJCC_Stage_Description[metastizedgroup] <- classifications[6]
+ajcc_cols$AJCC_Stage_Description[nodegroup] <- classifications[5]
+ajcc_cols$AJCC_Stage_Description[groups14] <- classifications[4]
+ajcc_cols$AJCC_Stage_Description[group2psa20] <- classifications[3]
+ajcc_cols$AJCC_Stage_Description[group1psa20] <- classifications[2]
+ajcc_cols$AJCC_Stage_Description[group1psa10] <- classifications[1]
+
+#Lets view the first 6 classification descriptions.
+head(ajcc_cols$AJCC_Stage_Description)
+
+#Add this column to rest of data
+staging_dat$AJCC_Stage_Description <- ajcc_cols$AJCC_Stage_Description
+```
+This type of NLP processing methodology described above is very useful in automating the translation of exome and transcriptome numeric sequencing of the cancer genes into something digestible for the general public. Very few people understand what `M0` means with regards to a prognosis of prostrate cancer disease. As evidenced by this analysis, `M0` indicates that the cancer had no spread elsewhere in body. Practical applications of this particular NLP methodology may include sharing sequencing results with affected individuals through a patient portal, informing the care team of results through the electronic medical record or automating documentation. 
+
+##Relational Data 
+With the data for the GDC portal clinical dataset cleaned, we wanted to compare apples to apples and determine just how different our newly cleaned clinical dataset was from the already clean website version. The following diagram illustrates how the clinical dataset is interconnected with the already clean version from the website. Highlighted below it is apparent that four of the columns present in the clinical dataset serve as foreign keys for the cleaned dataset. These columns include `case submitter id`, `ethnicity`, `race`, and `vital status`. We will utilize this relationship to join the data in subsequent steps. 
+
+```{r img-with-knitr, echo=FALSE, fig.align='center', out.width='100%'}
+knitr::include_graphics("~/Downloads/RelationalDataDiagram.png")
+```
+
+##SQL to JOIN and APPEND DATA 
+Althought the two datasets do share similarities one stark difference was the number of observations contained in each. The clinical dataset cleaned by the DiseaseDivas contained nearly 960 observations while the cleaned version taken directly from the GDC portal website only contained 493. `What might be contributing to this discrepancy?`
+
+After sorting the data by `Case Submitter ID`, we learned that several of the `case submitter Id's` in the cleaned clinical dataset were duplicates due to columns AJ and AN corresponding to `treatment outcome` and `treatment type`. For our analysis treatment outcome and treatment type were not relevant. Thus, to account for this discrepancy in the data observations we copied the data from the `cleaned sample` sheet in Excel and created a new sheet called `removed dups`. In this sheet we removed the columns that contained the split version of the therapy and NOS which corresponded to columns AK-AN. Additionally we removed columns AJ and AN then proceeded to use the `Remove Duplicates` tool in Excel. 
+
+Once this cleaning in Excel was complete we were left with 493 observations of 39 variables for the clinical dataset. The lengths of the two datasets therefore aligned. To confirm that this was indeed true we imported the data into R and compared both datasets using the `dim` function. 
+
+```{r}
+new_sample <- read.csv("removed_dups.csv") #clinical data 
+new_sample <- subset(new_sample, select=-c(36:39))
+dim(new_sample)
+GDC <- read.csv("Dataset2DD.csv") #cleaned data from GDC portal
+GDC <- rename(GDC, case_id=Case.UUID)
+dim(GDC)
+```
+The clinical data that we cleaned was loaded into R as `new sample`. The columns which we had removed in Excel,AJ-AN, unfortunately still appeared but with `NA` values contained in each row. We removed these columns using the subset function. The clinical dataset then contained 493 observations of 35 data points while the cleaned data contained 493 observations of 24 data points. The lengths match! 
+
+After confirmation that the lengths of the two datasets matched we began to conduct our SQL relational data comparative analysis. Ultimately the goal of this analysis was to relate findings across the cBioPortal data against the GDC portal data. Although the variables greatly differed between the two data sources two things that both datasets did have in common were the `Diagnosis Age` and the `Prior Treatment`. We therefore decided to group the diagnosis age by the age stratified bins previously used as per the BJC paper. 
+
+We started with the first dataset utilizing the dataframe `remove nonuniques` for which the repeat values had been removed. Next we renamed the `Patient Id` and the `Diagnosis Age` column so that they were easier to call in the SQL syntax. Using the `sqldf` package we subsetted just the `Patient Id` and the `Diagnosis Age` and  employed a `case when` statement similar to an ifelse statement in R to group the ages by their respective bins.This was saved to the dataframe `dataset 1 sql`. The name given to this newly created age group column was the case when statement therefore we changed the name to `agegrp` using the `names` function.  We then appended this data in `dataset 1 sql`  to the original dataframe using the `JOIN` syntax. This appended version of the data was saved to `join data1 sql`. To ensure that the ages did indeed match the new groupings we selected the `Age` column and the `agegrp` column and conducted a quick investigation utilizing the `head` function. Voila! As the output demonstrates, the age stratification in SQL was indeed successful. 
 
 ```{r}
 #install.packages("sqldf")
 library(sqldf)
-new_sample <- read.csv("removed_dups.csv")
-new_sample <- subset(new_sample, select=-c(36:39))
-dim(new_sample)
-GDC <- read.csv("Dataset2DD.csv")
-GDC <- rename(GDC, case_id=Case.UUID)
-dim(GDC)
-
 dataset_1 <- remove_nonuniques
 dataset_1 <- rename(dataset_1, ID=Patient.ID)
 dataset_1 <- rename(dataset_1,Age=Diagnosis.Age)
@@ -270,124 +382,64 @@ join_data1_sql <- sqldf("SELECT * FROM dataset_1 JOIN dataset_1sql on dataset_1.
 
 #age check 
 age_ds1 <- select(join_data1_sql,"Age","agegrp")
-
-joined_data <- sqldf("SELECT * FROM new_sample JOIN GDC on new_sample.case_id=GDC.case_id")
-view(joined_data)
-dim(joined_data)
+head(age_ds1)
 ```
 
-extracting numeric digits as text mining 
+With the first data source formatting complete we then moved on to the second data source, the GDC portal data. Here a few more steps were employed given that we had to join the clinical dataset to the cleaned website version of the data in order to compare it as a whole to the cBioPortal data. Thus, we first joined the clinical dataset to the cleaned website data based on the foreign key for the `Case Id`. The combination of the two datasets produced a large dataset of 493 observations with 59 data points. 
 
 ```{r}
-z <- substr(joined_data$Age.at.diagnosis, 1,2)
-z
-joined_data$Age <- cbind(z)
-joined_data$Age <- as.numeric(joined_data$Age)
-joined_data[36] <- NULL
-view(joined_data)
-joined_data <- rename(joined_data, ID=case_id)
+joined_data <- sqldf("SELECT * FROM new_sample JOIN GDC on new_sample.case_id=GDC.case_id")
 dim(joined_data)
-
 ```
+Fifty-nine data points is A LOT of data. Before proceeding with our SQL additions we perused this new data sample. We noticed many columns for which the same value was contained within every row of the column so we employed the same `find nonuniques` custom function from our earlier cleaning of cBioPortal to remove the columns where the data was repeated. 
+
 ```{r}
 repeat_cols <- find_nonuniq(joined_data)
 remove_dups <- joined_data[,-repeat_cols]
 dim(remove_dups)
 ```
+From 59 columns we then reduced to 54 columns. Still yet we had duplicate columns present in the data but of a different kind. These columns were the foreign keys present in the two datsets: `case submitter id`, `ethnicity`, `race`, and `vital status`. To account for this duplication we employed the use of a new custom function called `carbon copy`. This function looks through the dataframe and removes the columns that are duplicates of each other. It employs base R syntax using the `!` to facilitate the match. 
+
 ```{r}
 carbon.copy <- function(df){
-  df
-  for(i in 1:ncol(df)){
-    for(j in 1:nrow(df[i])){
-      if(!(nrow(unique(df[i])) > 1)){
-        df = df[-c(i)]
-      }
-    }
-  }
-  return(df)
+  return(df[!duplicated(as.list(df))])
 }
 
-remove_dup_upd <- carbon.copy(remove_dups)
-
+new_updatedremovedups <- carbon.copy(remove_dups)
+dim(new_updatedremovedups)
 ```
+After employing the use of the `carbon copy` function we were left with 45 columns in the new dataframe `new updated remove dups`. Investigation of the data confirms that the duplicate foreign keys were indeed removed from the second half the data, from columns 33 onwards in `removed dups`. The first occurrence of the foreign key still remains so no information was lost as part of this function. 
 
-
-
+Before we could add the age group stratification we needed to perform a bit of natural language processing, specifically text mining. `Age at Diagnosis` as per the cleaned website version of the GDC portal data was presented as a `character` or string value, `63 years 262 days`. In order for us to be able to use this data to create our age stratification we needed to extract the 2 numeric digits at the beginning of the string relating to age in years. To do this we used the `substr` function which extracts substrings in a character vector. We set the `start` argument as the first position and the `stop` argument as the second position in order to capture the two digits necessary. Then, we merged this vector using the `cbind` function to the `new updated remove dups` dataframe. Unfortunately the value was still saved as a character so we had to change the format of the variable to numeric using the `as.numeric` function. Some `NA` values were introduced as part of this function which were applicable given that the data for `Age at Diagnosis` was missing in those cases. 
 
 ```{r}
-## removing some duplicated manually 
-remove_dups[52]<-NULL #removes the ethnicity duplicate 
-remove_dups[52] <- NULL #removes the age duplicate 
-dim(remove_dups)
+z <- substr(new_updatedremovedups$Age.at.diagnosis, 1,2)
+head(z)
+new_updatedremovedups$Age <- cbind(z)
+new_updatedremovedups$Age <- as.numeric(new_updatedremovedups$Age)
 ```
+Lastly, we performed the age stratification. In order to run the SQL syntax as done previously we renamed the `Case ID` column to `ID` for ease of use in the arguments. We employed the same methodology as before using `case when` statements to group the ages by the BJC paper age bins. Finally we merged the data from the subset for age stratification to the combined GDC `dataset 2`. 
 
 ```{r}
-dataset_2 <- remove_dups
-dataset_2sql <- sqldf("SELECT ID, case when Age >=40 and Age <= 59 then '40-59' when Age >59 and Age <= 69 then '60-69'when Age >69 and Age <= 79 then '70-79' else '80+' end  FROM remove_dups GROUP BY ID,
+new_updatedremovedups <- rename(new_updatedremovedups, ID=case_id)
+dataset_2 <- new_updatedremovedups
+dataset_2sql <- sqldf("SELECT ID, case when Age >=40 and Age <= 59 then '40-59' when Age >59 and Age <= 69 then '60-69'when Age >69 and Age <= 79 then '70-79' else '80+' end  FROM dataset_2 GROUP BY ID,
                       case when Age >=40 and Age <= 59 then '40-59' when 
                       Age >59 and Age <= 69 then '60-69'when
                       Age >69 and Age <= 79 then '70-79' 
                       else '80+' end")
 names(dataset_2sql)[2]<-"agegrp"
-dataset_2$agegrp <- cbind(dataset_2sql[2])
-view(dataset_2)
-
+join_data2_sql <- sqldf("SELECT * FROM dataset_2 JOIN dataset_2sql ON dataset_2.ID=dataset_2sql.ID")
 ```
 
+At this point both the cBioPortal and GDC datasets have been outfitted with age stratified bins facilitating greater analysis of the clinical parameters in relation to age. Furthermore the clinical dataset along with the website version of the GDC data have been merged to create one cohesive dataset. This relational data comparative analysis provides great insight into the discrepancies apparent in the data and the similarities exhibited by the datasets. In addition the methods employed can aid in subsequent research down the line in comparing each dataset to each other to garner insights into the burden and progression of metastatic prostate cancer. 
 
-```{r}
-ggplot(data.frame(dataset_2), aes(x=Age)) +
-  geom_histogram(colour="black",fill="lightskyblue") +theme_classic()
-  
-summary(dataset_2$Age)
-  
-ggplot(data.frame(dataset_1), aes(x=Age)) +
-  geom_histogram(colour="black",fill="lightsalmon") + theme_classic()
-summary(dataset_1$Age)
+##Dashboard 
+Lastly, we couldn't let our beautiful analyses go to waste so we created a simple dashboard in Excel of some of our more notable and significant graphs from this prostate cancer analysis. 
 
+```{r img-with-knitr, echo=FALSE, fig.align='center', out.width='100%'}
+knitr::include_graphics("~/Downloads/Dashboard.png")
 ```
-
-
-```{r}
-join_data1_sql[12] <- NULL
-```
-
-
-```{r}
-freq_1treat <-join_data1_sql %>% group_by(agegrp,Prior.Treatment) %>% summarise(Freq=n())
-dat2 <- dataset_2
-dat2[dat2 == "'--"] <- NA
-dat2 <- dat2[!is.na(dat2$prior_treatment),]
-freq_2treat <- dat2 %>% group_by(agegrp,prior_treatment) %>% summarise(Freq=n())
-
-
-ggplot(data.frame(freq_1treat), aes(x=agegrp, y=Freq)) +
-  labs(x="Age Grouped by BJC paper levels", y="Frequency of Prior Treatment", ) +
-  geom_bar(aes(fill=Prior.Treatment),stat="identity",position="dodge") +
-  guides(fill=guide_legend(title="Prior Treatment"))+
-  scale_fill_brewer(palette="Oranges") +
-  theme_classic()
-
-x <- c("40-59","40-59","60-69","60-69","70-79","70-79","80+")
-freq_2treat$AGEgrp <- cbind(x)
-```
-
-
-```{r}
-colors <-c("#014f86","#bde0fe")
-ggplot(data.frame(freq_2treat), aes(x=AGEgrp, y=Freq)) +
-  labs(x="Age Grouped by BJC paper levels", y="Frequency of Prior Treatment", ) +
-  geom_bar(aes(fill=prior_treatment),stat="identity",position="dodge") +
-  guides(fill=guide_legend(title="Prior Treatment"))+
-  scale_fill_manual(values=colors)+
-  theme_classic()
-
-
-```
-
-
-
-
 
 
 
