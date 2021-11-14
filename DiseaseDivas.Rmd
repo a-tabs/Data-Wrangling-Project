@@ -1,7 +1,7 @@
 ---
-title: "DiseaseDiva"
-author: "Us"
-date: "10/24/2021"
+title: "Data Wrangling Final Project"
+author: "The Disease Divas: Afsha Tabasum, Jessica Serrao, Parinitha Kompala, Alisa Tvorun Dunn, Ayush Chakraborty"
+date: "11/16/2021"
 output:
   pdf_document: default
   html_document: default
@@ -11,7 +11,7 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Introduction 
+# Introduction 
 Prostate cancer is among one of the leading causes of death in males in the United States. The genomic study of metastatic prostate cancer has been limited due to tumor samples being obtained from autopsies as well as limited cohort pre-clinical models. Prospective studies are few and far between due to limitations in collecting adequate tumor tissue through biopsy. A paper published in 2015 prospectively analyzed tumor biopsies among affected individuals. Subsequently as of 2016, genomic data for prostate cancer has become more widely available due to the National Cancer Institutes (NCI) Genomics Data Commons (GDC).
 
 In this project we will explore data from both the 2015 prospective cohort study along with data available from the NCI's Genomic Data Commons. This project aims to investigate three data sets, through mapping and transformation of the raw data through multiple platforms such as Excel, SQL and R,  with the ultimate goal of optimizing downstream analysis of the prostate cancer cohorts. We will discuss various methods by which we wrangled the data to investigate underlying associations between individual case presentations and manifestation of disease.
@@ -21,48 +21,49 @@ A team of 73 researchers conducted a multi-institutional study that investigated
 The link to the publication can be found [here.](https://pubmed.ncbi.nlm.nih.gov/26000489/)
 
 Data was extracted from the cBioPortal, a public cancer genomics site hosted and mainted by the Memorial Sloan Kettering Cancer Center. The sample included 150 individuals with metastatic prostate cancer along with 17 data points per individual,  described below:
--**Patient ID**: unique patient identifier (number)
--**Sample ID**: unique biopsy sample identifier from clinical trial(number)
--**Mutation Count**: mutation rate for mCRPC defined as mutations per megabase or mutations/Mb (number)
--**Fraction Genome Altered**: fraction of mutant allele variants in biopsy (number)
--**Diagnosis Age**: patient's age when they were diagnosed (number)
--**Tumor Site**: physical site of tumor on human body from which biopsy was taken (string)
--**Abiraterzone (ABI) and Enzalutamide (ENZA) Exposure Status**: exposure to second-generation androgen deprivation therapies (binary: yes/no)
--**Center of Sequencing**: the international academic medical center where exome sequencing occurred (string)
--**Prior Treatment**: receipt of previous androgen deprivation therapy (binary:yes/no)
--**Site Sequenced**: site of exome sequencing: Broad or UM (string)
--**tumor content**: percentage of tumor captured in the biopsy (number)
+
++ **Patient ID**: unique patient identifier (number)
++ **Sample ID**: unique biopsy sample identifier from clinical trial(number)
++ **Mutation Count**: mutation rate for mCRPC defined as mutations per megabase or mutations/Mb (number)
++ **Fraction Genome Altered**: fraction of mutant allele variants in biopsy (number)
++ **Diagnosis Age**: patient's age when they were diagnosed (number)
++ **Tumor Site**: physical site of tumor on human body from which biopsy was taken (string)
++ **Abiraterzone (ABI) and Enzalutamide (ENZA) Exposure Status**: exposure to second-generation androgen deprivation therapies (binary: yes/no)
++ **Center of Sequencing**: the international academic medical center where exome sequencing occurred (string)
++ **Prior Treatment**: receipt of previous androgen deprivation therapy (binary:yes/no)
++ **Site Sequenced**: site of exome sequencing: Broad or UM (string)
++ **tumor content**: percentage of tumor captured in the biopsy (number)
 
 The National Cancer Institute (NCI) maintains a unified repository of genomic data known as the Genomic Data Commons(GDC). Groundwork for this repository began in June 2015 with nearly 50,000 raw data sequences analyzed by June 2016. This data sharing platform uses an Open-Stack-based private cloud to unite several large-scale cancer genome research programs such as TCGA and OCG. The purpose of this repository is to standardize the data processing of these multi-dimensional data sets by using common bioinformatics pipelines that facilitate direct comparison of the data. 
 
 More about the National Cancer Institute's Genomic Data Commons can be found [here.](https://gdc.cancer.gov/about-gdc)
 
-Data was extracted from GDC Portal's Exploration page. The "cleaned" version of the data sample included 493 individuals with metastatic prostrate cancer along with 24 data pointsper individual as described below: 
--**CaseUUID**: universally unique identifier assigned to every entity in the data model (string)
--**CaseID**:specific individual cases using the submitter ID from the genomic cancer research program (string)
--**Project**:The cancer research program from which the case originated from (string)
--**Primary Site**: The primary site of the cancer (string)
--**Gender**:"Gender is defined as a set of characteristics that distinguish persons based on their social roles" (string)
--**Files**: the quantity of files available for that case (number)
--**Seq**:Number of the sequencing reads(an inferred sequence of basepairs) (number)
--**Exp**:The transcriptome profiling (number)
--**SNV**:simple nucleotide variation (number)
--**CNV**:Copy number variation,the number of copies of a particular gene varies from one individual to the next (number)
--**Meth**:Number of DNA methylation that took place (number)
--**Clinical**: The number of clinical alterations (number)
--**Bio**:biospecimen (number)
--**Mutations**:The number of simple somatic mutations detected for that case(number)
--**Genes**: The quantity of genes affected by mutations for each case (number)
--**Slides**: the quantity of slides available for each case (number)
--**Program**: The type of program the subject is enrolled in “The Cancer Genome Atlas” or the “Count Me In” (string) 
--**Disease Type**: This describes if it is Adenomas and Adenocarcinomas, the location where the cancer is formed (string)
--**Age at diagnosis**:Age at the time of diagnosis calculated from their day of
-birth to the day they were diagnosed with cancer (string)
--**Days to death**:The date from when they were diagnosed, and they died (string)
--**Vital Status**: the survival status of the person (string)
--**Primary Diagnosis**:Their initial pathological diagnoses of cancer (string)
--**Ethnicity**: "An individual's self-identified social and cultural category, particularly whether they identify as Hispanic or Latino" (string)
--**Race**: "A taxonomic group that is a division of a species that is classified arbitrarily. It is characterized by shared heredity, physical attributes, and behavior, and in the case of humans, by common history, nationality, or geographic distribution" (string)
+Data was extracted from GDC Portal's Exploration page. The "cleaned" version of the data sample included 493 individuals with metastatic prostrate cancer along with 24 data points per individual as described below: 
+
++ **CaseUUID**: universally unique identifier assigned to every entity in the data model (string)
++ **CaseID**:specific individual cases using the submitter ID from the genomic cancer research program (string)
++ **Project**:The cancer research program from which the case originated from (string)
++ **Primary Site**: The primary site of the cancer (string)
++ **Gender**:"Gender is defined as a set of characteristics that distinguish persons based on their social roles" (string)
++ **Files**: the quantity of files available for that case (number)
++ **Seq**:Number of the sequencing reads(an inferred sequence of basepairs) (number)
++ **Exp**:The transcriptome profiling (number)
++ **SNV**:simple nucleotide variation (number)
++ **CNV**:Copy number variation,the number of copies of a particular gene varies from one individual to the next (number)
++ **Meth**:Number of DNA methylation that took place (number)
++ **Clinical**: The number of clinical alterations (number)
++ **Bio**:biospecimen (number)
++ **Mutations**:The number of simple somatic mutations detected for that case(number)
++ **Genes**: The quantity of genes affected by mutations for each case (number)
++ **Slides**: the quantity of slides available for each case (number)
++ **Program**: The type of program the subject is enrolled in “The Cancer Genome Atlas” or the “Count Me In” (string) 
++ **Disease Type**: This describes if it is Adenomas and Adenocarcinomas, the location where the cancer is formed (string)
++ **Age at diagnosis**:Age at the time of diagnosis calculated from their day of birth to the day they were diagnosed with cancer (string)
++ **Days to death**:The date from when they were diagnosed, and they died (string)
++ **Vital Status**: the survival status of the person (string)
++ **Primary Diagnosis**:Their initial pathological diagnoses of cancer (string)
++ **Ethnicity**: "An individual's self-identified social and cultural category, particularly whether they identify as Hispanic or Latino" (string)
++ **Race**: "A taxonomic group that is a division of a species that is classified arbitrarily. It is characterized by shared heredity, physical attributes, and behavior, and in the case of humans, by common history, nationality, or geographic distribution" (string)
 
 
 Using patient data from the 2015 prospective cohort study, we centered our project around three main aims:
@@ -76,21 +77,22 @@ Our last aim, titled the "Bonus Aim" as we hadn't originally planned to perform 
 We also wanted to utilize the lesson on Natural Language Processing from class in our data sets, so we applied the principles of NLP to the second data set in order to better understand information that was given about cancer stages for each patient. In order to do this, we used Regex and information on cancer stages descriptions found [here.](https://www.cancer.org/cancer/prostate-cancer/detection-diagnosis-staging/staging.html)
 
 
-## PIPELINE
+# PIPELINE
 
 Below is the pipeline for our project. It covers our cleaning process for both data sets, our process for working with relational data (with GDC data), how we performed Natural Language Processing on the GDC portal data sets, and what we did for each of our aims. We will be covering each of these points in detail over the course of this paper.
 
 ```{r img-with-knitr, echo=FALSE, fig.align='center', out.width='100%'}
 knitr::include_graphics("~/Desktop/Data-Wrangling-Project/Pipeline_Final.png")
 ```
-##Methods 
+
+# Methods 
 
 
-# GITHUB
+## GITHUB
 
 We used Github, a version-control software readily available on the web, to collaborate with each other throughout the project and efficiently add our individual contributions to our final paper. We created a repository titled "Data Wrangling Project", which included our final Rmd file (this paper), a copy of our project pipeline image, our custom library package, and all relevant data sets throughout our analysis. We followed a standard protocol for adding and updating changes to our files -- we used the git pull command for updating our files and we used the add, commit, and push commands for adding our individual changes to the repository. Utilizing Github allowed all of our group members to work on our individual aims at our own time and pace while keeping everyone else updated on our individual and overall progress. A link to our finals repository can be found [here](https://github.com/a-tabs/Data-Wrangling-Project).
 
-# CUSTOM FUNCTIONS
+## CUSTOM FUNCTIONS
 Below are our custom functions that will be used throughout our data cleaning and joining processes. 
 
 Our first function, `string_NA`, checks for values in a data frame that are equal to the string " '-- ", and changes the value to "NA".
@@ -136,12 +138,12 @@ example_dat = DiseaseDivas::carbon.copy(rawdat) # Use library to get rid of dupl
 dim(example_dat) # Check new non-duplicate data frame dimensions
 ```
 
-# Extracting the Data from the cBioPortal 
+## Extracting the Data from the cBioPortal 
 The first data set was downloaded from the cBioPortal site using the "download clinical data for the selected cases" button extracting all columns. 
 
 The link to the data set can be found [here.](https://www.cbioportal.org/study/clinicalData?id=prad_su2c_2015)
 
-# Cleaning Our Data
+## Cleaning Our Data
 The first data set was downloaded as a TSV file which required conversion in Excel to a CSV file. After importing the data into Excel using the Import Data From Text tool, the worksheet was saved as a csv file. The raw data contained 150 rows and 20 columns. As a team we worked through the exploratory investigation and cleaning of the data by utilizing GitHub to collaborate on an R Markdown file. 
 
 ```{r}
@@ -187,6 +189,8 @@ Several columns appeared to be populated by the same value for each row. For exa
 cols_nonunique=DDCustomPkg::find_nonuniq(complete_dat)
 remove_nonuniques <- complete_dat[,-cols_nonunique]
 ```
+
+# Aim 1
 
 ## Aim 1.1: Classify severity of cancer by site.
 
@@ -470,6 +474,8 @@ p.test
 
 Now that we have completed our analysis for Aim 1, we can conclude that exposure status has shown evidence of associaiton with prior treatment status (Taxane treatment) and sequencing site, and that sequencing site does not seem to be associated with severity of tumor content. 
 
+# Aim 2
+
 ## Aim 2.1 - Assign classifications of “high”, “medium” or “low” based on the intensity of mutation count
 
 For Aim 2, we will be creating a mutation count classification system similar to the one made and utilized in Aim 1. To assess how we should divide the counts into "high", "medium", and "low", lets first look at the distribution of Mutation Count:
@@ -641,7 +647,7 @@ grid.arrange(temp_works, p2, layout_matrix = lay)
 ```
 Now that we can compare severity of tumor content directly next to frequency of biopsy site, we can visually assess any possible correlation between the two. After comparing the two side-by-side, we can see that there does not seem to be any association between tumor content severity at a biopsy site and how frequently that biopsy site was sampled in this data set. And with that, we can complete our analysis for Aim 2!
 
-## BONUS AIM
+# BONUS AIM
 The last aim checks for an association between diagnosis age and tumor site. According to the Cleveland Clinic 1 in 6 men will be diagnosed with prostate cancer during the course of their lifetime. Research from the American Cancer Society suggests that 6 out of 10 cases of prostate cancer are diagnosed among men 65 years or older. As mentioned previously the mean age of diagnosis among this prospective cohort was 67 years of age. Prior research suggests that as men get older their risk of being diagnosed with prostate cancer increases. In addition, the publication in Cell suggests that bone tumors are the most common site of metastatic disease. This aim therefore intends to determine whether these two prior notions hold true among the data in question. 
 
 To conduct the analysis we subset the data columns Diagnosis.Age and Tumor.Site into a data frame called age_tumor. The numeric index of these columns was 4 and 11 respectively. Before proceeding with any analysis we conducted an exploratory investigation to understand the quantity of unique tumor sites present in the data set along with the spread of age at diagnosis. 
@@ -704,7 +710,7 @@ Curiously enough, bone was not the most common site of metastatic disease among 
 Overall, this aim confirms that as men age incidence of prostate cancer increases with metastasis of disease occurring more frequently in the lymph nodes and bone. This data was limited given that the population was a bit skewed toward the older age groups (60-79) with very few cases representing those older than 80. More information as to prognosis and vital status beyond age 80 would be beneficial in determining whether the assumption of age and incidence is valid. 
 
 
-## Natural Language Processing
+# Natural Language Processing
 There is no actual natural language in these data sets to process, but the principles and tools of natural language processing can be utilized to extract more information from the data. The second data has four columns corresponding to the AJCC staging classification of each patient in the data set. To help better understand what these classifications mean, we are adding a new column that includes a written description of each of the AJCC staging classifications that are provided. To do this, we can use Regex to identify AJCC stage patterns to match them to their written description. The written descriptions of each stage come from this webpage: https://www.cancer.org/cancer/prostate-cancer/detection-diagnosis-staging/staging.html
 
 ```{r}
@@ -765,7 +771,7 @@ staging_dat$AJCC_Stage_Description <- ajcc_cols$AJCC_Stage_Description
 ```
 
 
-##Extract the Data from National Cancer Institute 
+## Extract the Data from National Cancer Institute 
 We downloaded the second cancer data set from the National Cancer Institute GDC Data Portal for all the clinical cases including all the columns. 
 
 The link can be found [here.](https://portal.gdc.cancer.gov/exploration?cases_size=100&filters=%7B%22op%22%3A%22and%22%2C%22content%22%3A%5B%7B%22op%22%3A%22in%22%2C%22content%22%3A%7B%22field%22%3A%22cases.primary_site%22%2C%22value%22%3A%5B%22prostate%20gland%22%5D%7D%7D%2C%7B%22content%22%3A%7B%22field%22%3A%22cases.project.project_id%22%2C%22value%22%3A%5B%22TCGA-PRAD%22%5D%7D%2C%22op%22%3A%22in%22%7D%2C%7B%22content%22%3A%7B%22field%22%3A%22genes.is_cancer_gene_census%22%2C%22value%22%3A%5B%22true%22%5D%7D%2C%22op%22%3A%22in%22%7D%5D%7D&searchTableTab=cases)
@@ -781,7 +787,7 @@ Exported the "Sample" data as a standalone CSV file.
 sample <- read.csv("~/Downloads/cleanedsample.csv")
 ```
 
-##Dealing with Missing Values 
+## Dealing with Missing Values 
 
 ```{r}
 temp.NA <- sample
@@ -812,23 +818,23 @@ marginplot(temp.NA1[,c(1,20)])
 #install.packages("sqldf")
 library(sqldf)
 library(tidyverse)
-new_sample <- read.csv("removed_dups.csv")
+new_sample <- read.csv("~/Desktop/Data-Wrangling-Project/removed_dups.csv")
 new_sample <- subset(new_sample, select=-c(36:39))
 dim(new_sample)
-GDC <- read.csv("data set2DD.csv")
+GDC <- read.csv("~/Desktop/Data-Wrangling-Project/Dataset2DD.csv")
 GDC <- rename(GDC, case_id=Case.UUID)
 dim(GDC)
 
 dataset_1 <- remove_nonuniques
 dataset_1 <- rename(dataset_1, ID=Patient.ID)
 dataset_1 <- rename(dataset_1,Age=Diagnosis.Age)
-dataset_1sql <- sqldf("SELECT ID, case when Age >=40 and Age <= 59 then '40-59' when Age >59 and Age <= 69 then '60-69'when Age >69 and Age <= 79 then '70-79' else '80+' end  FROM data set_1 GROUP BY ID,
+dataset_1sql <- sqldf("SELECT ID, case when Age >=40 and Age <= 59 then '40-59' when Age >59 and Age <= 69 then '60-69'when Age >69 and Age <= 79 then '70-79' else '80+' end  FROM dataset_1 GROUP BY ID,
                       case when Age >=40 and Age <= 59 then '40-59' when 
                       Age >59 and Age <= 69 then '60-69'when
                       Age >69 and Age <= 79 then '70-79' 
                       else '80+' end")
 names(dataset_1sql)[2]<-"agegrp"
-join_data1_sql <- sqldf("SELECT * FROM data set_1 JOIN data set_1sql on data set_1.ID=data set_1sql.ID")
+join_data1_sql <- sqldf("SELECT * FROM dataset_1 JOIN dataset_1sql on dataset_1.ID=dataset_1sql.ID")
 
 #age check 
 age_ds1 <- select(join_data1_sql,"Age","agegrp")
@@ -886,9 +892,9 @@ dataset_2$agegrp <- cbind(dataset_2sql[2])
 ```
 
 
-## CONCLUSION
+# CONCLUSION
 
-# Summary
+## Summary
 Our analysis aimed to understand the associations between patient characteristics and severity of prostate cancer through various data wrangling procedures we learned throughout the quarter. After utilizing three platforms for our cleaning and wrangling processes (R, SQL, and Excel), and creating numerical summaries along with visual representations of our data through R packages such as gtsummary and ggplot, we have come to the following conclusions:
 
   1. After performing a Chi-squared test on the relationships between geographic location and severity of tumor content (%), the data set provides no        evidence of association between geographic location and severity of tumor content (%).
@@ -896,7 +902,7 @@ Our analysis aimed to understand the associations between patient characteristic
   3. As men age, incidence of prostate cancer increases with metastasis of disease occurring more frequently in the lymph nodes and bone. 
   4. From visual assessments, there does not seem to be an association between exposure status and mutation group, fraction of genome altered, or tumor      content.
 
-# Next Steps
+## Next Steps
 
 After joining the two data sets from GDC via SQL, we noticed that our initial data set from cBioPortal and the new data set both had data on patient's age at diagnosis as well as whether the patient had prior treatment. As a basic step to check similarities between patients across both data sets, we plotted the distributions of age at diagnosis for both data sets.
 ```{r}
@@ -980,9 +986,9 @@ Great! Now that we have the proportions and equal y axis ranges, we can see that
 This would be a great place to start further analysis if we had more time. We could look more into how prior treatment affects diagnosis age, if prior treatment has been linked to later diagnosis age, and where we would be able to find more data to test this association. One thing to note is that the first data set's patients were specifically studied on prior Taxane treatment, while the patients in the second data set did not have a specific treatment mentioned. So, we could also look at Taxane treatment effectiveness in preventing prostate cancer versus other treatments. In addition to investigating diagnosis age's relationship to prior treatment status, we had also noticed that the second data set had a "vital status" column which gives us information on the survival status of the patient. This information was missing from our first data set, so another great next step would be to track the incidence of disease in our second data set (from GDC), and by using our vital status column, we would calculate the patient mortality ratio for the GDC data set. 
 
 
-# Limitations
+## Limitations
 Though we were able to derive several conclusions from our data sets, there were a few limitations we faced. For starters, the data set we got from cBioPortal did not have well-defined variables or information on certain variables were calculated, what the units of measurements were, etc. For example, we initially struggled to find information on how tumor content and mutation count were measured, what the units of measurements were, and what ranges of each measurement were considered significant. When we tried to do some background research through search engines such as Google, we weren't able to find any helpful information, which leads us to our second limitation: prostate cancer data is very niche, and there were not many resources readily available for us to use to get a better understanding on some of the variables we were dealing with. Nevertheless, after reading through the data set's attached paper for understanding tumor content and looking at other academic papers to better understand how mutation count works, we were able to successfully interpret our variables of interest.
 
-# Looking Forward - Clinical Implications
+## Looking Forward - Clinical Implications
 If we were to use our analysis to make conclusions about the clinical implications of the prostate cancer data we analyzed throughout this project, our first piece of advice would be to further study associations between sequencing site and exposure status, along with prior treatment status and exposure status since we obtained significant results when studying these associations. Additionally, it would be worth looking into how age plays into certain factors such as prior treatment status and tumor site.
 
