@@ -22,7 +22,7 @@ A team of 73 researchers conducted a multi-institutional study that investigated
 
 The link to the publication can be found [here.](https://pubmed.ncbi.nlm.nih.gov/26000489/)
 
-Data was extracted from the cBioPortal, a public cancer genomics site hosted and mainted by the Memorial Sloan Kettering Cancer Center. The sample included 150 individuals with metastatic prostate cancer along with 17 data points per individual,  described below:
+Data was extracted from the cBioPortal, a public cancer genomics site hosted and maintained by the Memorial Sloan Kettering Cancer Center. The sample included 150 individuals with metastatic prostate cancer along with 17 data points per individual,  described below:
 
 + **Patient ID**: unique patient identifier (number)
 + **Sample ID**: unique biopsy sample identifier from clinical trial(number)
@@ -74,10 +74,9 @@ First, we wanted to look at possible associations between geographic location an
 
 Our second aim focused on patient mutation counts and their relationship to biopsy sites, exposure to second-generation androgen deprivation therapies, and fraction of patient's genome that was altered. According to a 2017 publication from Cell [Martincorena, et al. ](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5720395/?report=abstract), cancer will usually emerge in a patient after 1-10 mutations. Thus, we created a classification system to categorize mutation level as "high", "medium", or "low" based on the mutation count variable from the data set, and compare severity of mutation to other patient characteristics. Since the 2015 prospective cohort study was specifically interested in patients who developed metastatic, castration resistant prostate cancer (mCRPC), which occurs in individuals who develop resistance to androgen deprivation therapies (ADT), our second aim sought to look at correlations between mutation count and exposure to second-generation androgen deprivation therapies, along with fraction of patient's genome altered and biopsy sites. 
 
-Our last aim, titled the "Bonus Aim" as we hadn't originally planned to perform this analysis, studied possible associations between patient age at diagnosis and tumor site. We wanted to study this specific association to see if we could identify if earlier age at diagnosis corresponds to specific tumor site (likewise for older ages of diagnosis), since finding such an association could have clinical implications for when considering treatments for different age groups. To study this association, we performed an age stratified analysis based on age groups that were used by a population based study published in the British Journal of Cancer in 2013 [read here](https://www.nature.com/articles/bjc2013268#Tab1).
+Our last aim, titled the "Bonus Aim" was not initially part of the project scope. We wanted to verify that older age at diagnosis would lead to greater tumors among specific tumor sites where metastates was more common. Specifically we were interested in determining whether bone, as indicated in the 2015 Cell paper, contributed to the greatest amount of metastatic tumors particularly in the older age groups. To study this association, we performed an age stratified analysis based on age groups that were used by a population based study published in the British Journal of Cancer in 2013 [read here](https://www.nature.com/articles/bjc2013268#Tab1).
 
-We also wanted to utilize the lesson on Natural Language Processing from class in our data sets, so we applied the principles of NLP to the second data set in order to better understand information that was given about cancer stages for each patient. In order to do this, we used Regex and information on cancer stages descriptions found [here.](https://www.cancer.org/cancer/prostate-cancer/detection-diagnosis-staging/staging.html)
-
+We also wanted to utilize Natural Language Processing (NLP) in our data sets with the hopes of automating some of the exploratory investigations of text based findings. Ultimately this automation could serve as more efficent methods for pre-processing of exome and transcriptome sequencing data that would faciliate greater downstream analysis of the prostate cancer cohorts. Again, this NLP analysis was outside of the scope of our initial project aims but we were determined to carry out this analysis and thus applied the principles of NLP to the second data set in order to better understand information that was given about cancer stages for each patient. In order to do this, we used Regex and information on cancer stages descriptions found [here.](https://www.cancer.org/cancer/prostate-cancer/detection-diagnosis-staging/staging.html)
 
 # PIPELINE
 
@@ -92,12 +91,12 @@ knitr::include_graphics("~/Desktop/Data-Wrangling-Project/Pipeline_Final.png")
 
 ## GITHUB
 
-We used Github, a version-control software readily available on the web, to collaborate with each other throughout the project and efficiently add our individual contributions to our final paper. We created a repository titled "Data Wrangling Project", which included our final Rmd file (this paper), a copy of our project pipeline image, our custom library package, and all relevant data sets throughout our analysis. We followed a standard protocol for adding and updating changes to our files -- we used the git pull command for updating our files and we used the add, commit, and push commands for adding our individual changes to the repository. Utilizing Github allowed all of our group members to work on our individual aims at our own time and pace while keeping everyone else updated on our individual and overall progress. A link to our finals repository can be found [here](https://github.com/a-tabs/Data-Wrangling-Project).
+We used Github, a version-control software readily available on the web, to collaborate with each other throughout the project and efficiently add our individual contributions to our final paper. We created a repository titled "Data Wrangling Project", which included our final Rmd file (this paper), a copy of our project pipeline image, our custom library package, and all relevant data sets throughout our analysis. We followed a standard protocol for adding and updating changes to our files -- we used the git pull command for updating our files and we used the add, commit, and push commands for adding our individual changes to the repository. Utilizing Github allowed all of our group members to work on our individual aims at our own time and pace while keeping everyone else updated on our individual and overall progress. A link to our final repository can be found [here](https://github.com/a-tabs/Data-Wrangling-Project).
 
 ## CUSTOM FUNCTIONS
 Below are our custom functions that will be used throughout our data cleaning and joining processes. 
 
-Our first function, `string_NA`, checks for values in a data frame that are equal to the string " '-- ", and changes the value to "NA".
+Our first function, `string_NA`, checks for values in a data frame that are equal to the string '--, and changes the value to "NA".
 
 Our second function, `carbon.copy`, checks for columns that have the exact same values in a data frame. If two columns have the exact same values (case insensitive), the function will remove one of those columns.
 
@@ -148,7 +147,7 @@ The first data set was downloaded from the cBioPortal site using the "download c
 The link to the data set can be found [here.](https://www.cbioportal.org/study/clinicalData?id=prad_su2c_2015)
 
 ## Cleaning Our Data
-The first data set was downloaded as a TSV file which required conversion in Excel to a CSV file. After importing the data into Excel using the Import Data From Text tool, the worksheet was saved as a csv file. The raw data contained 150 rows and 20 columns. As a team we worked through the exploratory investigation and cleaning of the data by utilizing GitHub to collaborate on an R Markdown file. 
+The first data set was downloaded as a TSV file which required conversion in Excel to a CSV file. After importing the data into Excel using the `Import Data From Text` tool, the worksheet was saved as a csv file. The raw data contained 150 rows and 20 columns. As a team we worked through the exploratory investigation and cleaning of the data by utilizing GitHub to collaborate on an R Markdown file. 
 
 Please refer to our GitHub repository for the link to our csv data for the first dataset. It is labelled `diseaseddivadata`. 
 
@@ -157,52 +156,52 @@ Please refer to our GitHub repository for the link to our csv data for the first
 rawdat<- read.csv("~/Desktop/Data-Wrangling-Project/diseasedivadata.csv")
 ```
 
-To gain an understanding for the types of variables we would be analyzing along with some of the numeric summaries for the continuous variables, we employed the summary function. 
+To gain an understanding for the types of variables we would be analyzing along with some of the numeric summaries for the continuous variables, we employed the `summary` function. 
 
 ```{r pressure, echo=FALSE}
 #Summarize
 summary(rawdat)
 ```
 
-Preliminary findings indicate, mean age of diagnosis for prostate cancer is approximately 67 years of age. Average tumor content found in these biopsies appears to be 60%. Initial analysis revealed that there were several cells for which NA values were present. The following command was used to eliminate the NAs saving the new data to a data frame called complete_dat. 
+Preliminary findings indicate, mean age of diagnosis for prostate cancer is approximately 67 years of age. Average tumor content found in these biopsies appears to be 60%. Initial analysis revealed that there were several cells for which NA values were present. The following command was used to eliminate the NAs saving the new data to a data frame called `complete_dat`. 
 
 ```{r}
 #Remove NAs
 complete_dat <- na.omit(rawdat)
 ```
 
-Upon removal of the NAs, the data set reduced to 147 rows and 20 columns. Three patients from the original extract contained in rows 71 to 73 were therefore excluded from subsequent analyses due to the NAs being present in both the Diagnosis.Age column along with the Abiraterone (ABI) and Enzalutamide (ENZA) Exposure Status. These two columns are crucial in further analyses being as age is a related factor for severity of disease. Furthermore, without information as to prior exposure status to the androgen deprivation therapies, assessment of mCRPC is incomplete. 
+Upon removal of the NAs, the data set reduced to 147 rows and 20 columns. Three patients from the original extract contained in rows 71 to 73 were therefore excluded from subsequent analyses due to the NAs being present in both the `Diagnosis.Age` column along with the `Abiraterone (ABI) and Enzalutamide (ENZA) Exposure Status`. These two columns are crucial in further analyses being as age is a related factor for severity of disease. Furthermore, without information as to prior exposure status to the androgen deprivation therapies, assessment of mCRPC is incomplete. 
 
-Further analysis of the data revealed that several columns were found to have duplicated values. To assess whether the individual cases included in the sample were duplicated, we utilized the duplicated command to check the Sample ID column for repeat values. As shown below, none were found. 
+Further analysis of the data revealed that several columns were found to have duplicated values. To assess whether the individual cases included in the sample were duplicated, we utilized the `duplicated` command to check the `Sample ID` column for repeat values. As shown below, none were found. 
 
 ```{r}
 #Check for duplicates
 duplicated(complete_dat$Sample.ID)
 ```
 
-Upon cursory glance the Patient ID and Sample ID column appeared to be populated with the exact same values per each row. To confirm this assumption we used the following syntax to check if the values between the two columns were unique. The syntax reads as follows, from the complete_dat data frame check if Patient Id is not contained in Sample Id then output the results. 
+Upon cursory glance the `Patient ID` and `Sample ID` column appeared to be populated with the exact same values per each row. To confirm this assumption we used the following syntax to check if the values between the two columns were unique. The syntax reads as follows, from the `complete_dat` data frame check if `Patient Id` is not contained in `Sample Id` then output the results. 
 
 ```{r}
 #Check if sample id is dup
 complete_dat[!complete_dat$Patient.ID %in% complete_dat$Sample.ID, ]
 ```
 
-The output above is empty indicating that all the Patient Ids are contained within the Sample Id. In other words the two columns are the same. 
+The output above is empty indicating that all the Patient Ids are contained within the `Sample Id`. In other words the two columns are the same. 
 
-Several columns appeared to be populated by the same value for each row. For example, the Cancer.Type column was entirely populated by the value "Prostate Adenocarcinoma".  To determine whether this assumption was indeed true we created the following for loop that cycled through each column to check that the values contained in the column were unique. 
+Several columns appeared to be populated by the same value for each row. For example, the `Cancer.Type` column was entirely populated by the value "Prostate Adenocarcinoma".  To determine whether this assumption was indeed true we created the following for loop that cycled through each column to check that the values contained in the column were unique. 
 
 ```{r}
 cols_nonunique=DiseaseDivas::find_nonuniq(complete_dat)
 remove_nonuniques <- complete_dat[,-cols_nonunique]
 ```
 
-Consequently, after removal of the data columns with repeated values we were left with the "remove_nonuniques" dataframe which contained 147 rows and 11 columns. 
+Consequently, after removal of the data columns with repeated values we were left with the `remove_nonuniques` dataframe which contained 147 rows and 11 columns. 
 
 # Aim 1
 
 ## Aim 1.1: Classify severity of cancer by site.
 
-We used the dplyr library for most of the data manipulation for Aim 1.1. To begin our analysis, we extracted the two columns of interest: "Center of sequencing", which has the locations of where each patient sample was sequenced, and "Tumor content", which contains the tumor content of each patient sample. Tumor content was classified as percentages that were defined by computational analysis, based on mutant allele variant fractions and zygosity shifts. We made a separate table using just these two columns from the filtered data and named it "aim_1_1".
+We used the `dplyr` library for most of the data manipulation for Aim 1.1. To begin our analysis, we extracted the two columns of interest: `Center of sequencing`, which has the locations of where each patient sample was sequenced, and `Tumor content`, which contains the tumor content of each patient sample. Tumor content was classified as percentages that were defined by computational analysis, based on mutant allele variant fractions and zygosity shifts. We made a separate table using just these two columns from the filtered data and named it `aim_1_1`.
 ```{r}
 # Load dplyr library for data manipulation.
 library(dplyr)
@@ -210,7 +209,7 @@ library(dplyr)
 aim_1_1 = complete_dat %>%
   select(Center.of.sequencing, tumor.content)
 ```
-The next step in our analysis was to create a classification system for tumor content and categorize each patient sample as either low, medium, or high tumor content level. The study we downloaded our raw data from only included patient samples whose tumor content was greater than 20%, so we made a simple classification system in which 20-45% tumor content is considered low, 46-70% tumor content is considered medium, 71-100% tumor content is considered high. To add this classification to our data frame, we created a new column named "TC_Level" and added each classification for patient sample as a factor using if-else statements.
+The next step in our analysis was to create a classification system for tumor content and categorize each patient sample as either low, medium, or high tumor content level. The study we downloaded our raw data from only included patient samples whose tumor content was greater than 20%, so we made a simple classification system in which 20-45% tumor content is considered low, 46-70% tumor content is considered medium, 71-100% tumor content is considered high. To add this classification to our data frame, we created a new column named `TC_Level` and added each classification for patient sample as a factor using if-else statements.
 ```{r}
 # 20 - 45 is low
 # 46 - 70 is medium 
@@ -221,23 +220,23 @@ aim_1_1$TC_level <- as.factor(ifelse(aim_1_1$tumor.content < 46, 'Low',
                      ifelse(aim_1_1$tumor.content < 71, 'Medium', 'High')))
 ```
 
-The next step in our analysis was to group sequencing centers (aka the "Center of sequencing" column) into geographic regions. Sequencing centers in our data set included Dana-Farber Cancer Institute, Memorial Sloan Kettering Cancer Center, Karmanos Cancer Center, University of Michigan, University of Washington, and the Insitute of Cancer Research & The Royal Marsden. Geographic regions were grouped as shown below: 
+The next step in our analysis was to group sequencing centers (aka the `Center of sequencing` column) into geographic regions. Sequencing centers in our data set included `Dana-Farber Cancer Institute`, `Memorial Sloan Kettering Cancer Center`, `Karmanos Cancer Center`, `University of Michigan`, `University of Washington`, and `the Insitute of Cancer Research & The Royal Marsden`. Geographic regions were grouped as shown below: 
 
-EAST COAST LOCATIONS:
++**EAST COAST LOCATIONS**:
 DFCI (Boston, MA)
 MSKCC (New York, NY)
 
-MIDWEST LOCATIONS:
++**MIDWEST LOCATIONS**:
 Karmanos (Detroit, MI)
 U Michigan (Ann Arbor, MI)
 
-WEST COAST LOCATIONS:
++**WEST COAST LOCATIONS**:
 U Washington (Seattle, WA)
 
-INTERNATIONAL LOCATIONS:
++**INTERNATIONAL LOCATIONS**:
 RM-ICR (London, UK)
 
-To add the geographic regions to our data frame, we followed the same step used to add the tumor content classifications to the data frame -- we created a factor using if-else statements and added the region for each patient sample, as shown below
+To add the geographic regions to our data frame, we followed the same step used to add the tumor content classifications to the data frame -- we created a factor using `if-else` statements and added the region for each patient sample, as shown below
 ```{r}
 # Add geographic region based on sequencing center
 aim_1_1$Site_region <- as.factor(
@@ -249,7 +248,7 @@ aim_1_1$Site_region <- as.factor(
                             'West Coast', 'International'))))
 ```
 
-Now that we have created a classification system for tumor content and grouped sequencing centers by geographic region, we started to look at the data numerically and visually. To get a better understanding of the distribution of the tumor content levels across the geographic region, we created a simple table looking at the mean tumor content across each sequencing region. We made this table using the dplyr and gtsummary packages. The gtsummary package contains the tbl_summary() function which is very helpful when trying to create tables with different types of statistical information. We used piping to select the proper data columns from our original aim_1_1 subtable, and then we used the gtsummary package to design the table as shown below.
+Once we created a classification system for tumor content and grouped sequencing centers by geographic region, we started to look at the data numerically and visually. To get a better understanding of the distribution of the tumor content levels across the geographic region, we created a simple table looking at the mean tumor content across each sequencing region. We made this table using the `dplyr` and `gtsummary` packages. The `gtsummary` package contains the `tbl_summary()` function which is very helpful when trying to create tables with different types of statistical information. We used piping to select the proper data columns from our original `aim_1_1` subtable, and then we used the `gtsummary` package to design the table as shown below.
 ```{r}
 library(gtsummary)
 # Create numeric summary of mean tumor content by sequencing region
@@ -262,11 +261,11 @@ raw_tc_tab = aim_1_1 %>%
   modify_header(label = "") 
 raw_tc_tab
 ```
-From the table created above, we can see that the mean tumor content seems to be fairly equal among the geographic regions covered in the data. The mean tumor content ranges from 58% in the West Coast/internationally to 63% on the East Coast. Additionally, the standard deviations are also relatively similar across the regions, ranging from 18% to 21%. 
+From the table created above, we can see that the mean tumor content seems to be fairly equal among the geographic regions covered in the data. The mean tumor content ranges from 58% in the West Coast/internationally to 63% on the East Coast. Additionally, the standard deviations are also relatively similar across the regions, ranging from 18% to 21%. Notice the sample sizes are disproportionate between geographic region with the Midwest and West Coast containing the greatest number of affected individuals.
 
-Next, we tried to look at the data visually. We decided to make a bar plot to visually assess the distribution of the mean tumor content percentages across sequencing regions. In order to create my plot, we first used the tidyverse package to group my data by sequencing region, and then get the mean tumor content levels for each group. We made a new table, "raw_tc_df", which contains the mean tumor content level by sequencing region that we could feed into ggplot to create our visualization. 
+Next, we tried to look at the data visually. We decided to make a bar plot to visually assess the distribution of the mean tumor content percentages across sequencing regions. In order to create our plot, we first used the `tidyverse` package to group our data by sequencing region, and then get the mean tumor content levels for each group. We made a new table, `raw_tc_df`, which contains the mean tumor content level by sequencing region that we could feed into `ggplot2` to create our visualization. 
 
-Then, we used ggplot to create our boxplot. Using the data from "raw_tc_df", we plotted the mean tumor content on the y axis against the sequencing regions on the x axis. We then used several features (geom_text, scale_fill_brewer, theme, just to name a few) to improve the aesthetics of the plot.
+Then, we used `ggplot2` to create our boxplot. Using the data from `raw_tc_df`, we plotted the mean tumor content on the y axis against the sequencing regions on the x axis. We then used several features (`geom_text`, `scale_fill_brewer`, `theme`, just to name a few) to improve the aesthetics of the plot.
 ```{r}
 library(tidyverse)
 # Create subtable which contains mean tumor content levels by sequencing region
@@ -297,7 +296,7 @@ ggplot(data=raw_tc_df, mapping=aes(x=Site_region, y=mean.tumor.content,
   xlab("Sequencing Region") + ylab("Mean Tumor Content (%)")
 ```
 
-After visually assessing the mean tumor content levels by region, we can see that the tumor content levels do seem to be fairly equal among the geographic regions. Next, we decided to look at the distributions of tumor content levels (using my classification system) by center of sequencing. We made this table using the gtsummary package again. We also ran a Fisher's exact test and obtained a p-value of 0.9, suggesting that there is not a significant association between Sequencing Site and tumor content level. 
+After visually assessing the mean tumor content levels by region, we can see that the tumor content levels do seem to be fairly equal among the geographic regions. Next, we decided to look at the distributions of tumor content levels (using our classification system) by center of sequencing. We made this table using the `gtsummary` package again. We also ran a `Fisher's exact test` and obtained a p-value of 0.9, suggesting that there is not a significant association between Sequencing Site and tumor content level. Again, notice how the sample sizes for the various classifications differ with `Medium` containing the highest quantity of individuals while `Low` contained the fewest. They are relatively similar but the difference from `Medium` to `Low` is 9 individuals. 
 ```{r}
 # Make a table to look at tumor content levels across sequencing site
 p1 = aim_1_1 %>% 
@@ -312,7 +311,7 @@ p1 = aim_1_1 %>%
 p1
 ```
 
-To get a better visual assessment of the tumor content levels by sequencing sites, we made a grouped bar plot using ggplot:
+To get a better visual assessment of the tumor content levels by sequencing sites, we made a grouped bar plot using `ggplot2`:
 ```{r}
 mid_tab=table(aim_1_1$TC_level, aim_1_1$Center.of.sequencing)
 mid_df = data.frame(mid_tab)
@@ -340,7 +339,7 @@ grouped_plot_a = ggplot(data = mid_df,
 grouped_plot_a
 ```
 
-We then realized that this table might be misleading since some sequencing sites have a much larger sample size than others, so we decided to look at the tumor content levels by sequencing site region instead. This table was also made using gtsummary. 
+We then realized that this table might be misleading since some sequencing sites have a much larger sample size than others, so we decided to look at the tumor content levels by sequencing site region instead. This table was also made using `gtsummary`. 
 ```{r}
 # Create a table to compare tumor content levels across sequencing site regions
 library(dplyr)
@@ -354,7 +353,7 @@ aim_1_1 %>%
   add_p() %>% bold_labels()
 ```
 
-Our next visualization is a boxplot comparing tumor content by sequencing site. We used the theme feature in ggplot to change the fonts and colors in the plot. 
+Our next visualization is a boxplot comparing tumor content by sequencing site. We used the `theme` feature in `ggplot2` to change the fonts and colors in the plot. 
 
 ```{r}
 # Plot the tumor content percentages across sequencing site
@@ -384,7 +383,7 @@ raw_plot = ggplot(data = aim_1_1, mapping = aes(x=Center.of.sequencing,
 raw_plot
 ```
 
-Lastly, we plotted the tumor content levels by sequencing site region. We first made a subtable to count the frequencies of tumor content levels by site region, and then fed this table into ggplot. Once again, we utilized the theme feature to add labels to each bar and customize the fonts and colors in the graph.
+Lastly, we plotted the tumor content levels by sequencing site region. We first made a subtable to count the frequencies of tumor content levels by site region, and then fed this table into `ggplot2`. Once again, we utilized the `theme` feature to add labels to each bar and customize the fonts and colors in the graph.
 
 ```{r}
 # Make table to count frequencies of tumor content levels by site region
@@ -419,7 +418,7 @@ grouped_plot
 And that completes the analysis for aim 1.1!
 
 ## AIM 1.2: Classify by exposure status (grouped by prior treatment) by site
-Just like in Aim 1.1, we are going to use the library `dplyer` to perform data manipulation for this Aim. In order to know more about the exposure status, we select two columns: `Abiraterone..ABI..and.Enzalutamide..ENZA..Exposure.Status` which is a binary column for a patient's exposure to Abiraterone and Enzalutamide (contains Yes's and No's)  and `Prior.Treatment` stores the information if the patient has ever received any prior Taxane treatment or not.
+Just like in Aim 1.1, we uses the library `dplyr` to perform data manipulation for this Aim. In order to know more about the exposure status, we selected two columns: `Abiraterone..ABI..and.Enzalutamide..ENZA..Exposure.Status` which was a binary column for a patient's exposure to Abiraterone and Enzalutamide (contains Yes's and No's)  and `Prior.Treatment` which stored the information for if the patient had ever received any prior Taxane treatment or not.
 
 ```{r}
 # Load dplyr library for data manipulation.
@@ -435,7 +434,7 @@ head(aim_1_2,10)
 
 ```
 
-In order to have few categories for finding the exposure status based on prior treatment found in different sequencing institutes, we need to club institutes into 4 main regions based on the data we have: East Coast, Midwest, West Coast and International. Similarly in Aim 1.1, we run the same if-else code for Aim 1.2.
+In order to have few categories for finding the exposure status based on prior treatment found in different sequencing institutes, we needed to club institutes into 4 main regions based on the data we have: `East Coast`, `Midwest`, `West Coast` and `International`. Similar to Aim 1.1, we employed `if-else` code for Aim 1.2.
 
 ```{r}
 aim_1_2$Site_region <- as.factor(ifelse(aim_1_2$Center.of.sequencing == 'DFCI' | 
@@ -450,7 +449,7 @@ aim_1_2$Site_region <- as.factor(ifelse(aim_1_2$Center.of.sequencing == 'DFCI' |
 
 ```
 
-We now have grouped the Exposure status by Prior Treatment and have added the Sequencing region column into the data frame `aim_1_2`. Next, we calculate the mean of the all `Exposure.Status` counts based on the Sequencing Region and grouped by `Prior.Treatment`
+We grouped the Exposure status by Prior Treatment and  added the Sequencing region column into the data frame `aim_1_2`. Next, we calculates the mean of the all `Exposure.Status` counts based on the Sequencing Region and grouped by `Prior.Treatment`
 
 ```{r}
 library(gtsummary)
@@ -465,7 +464,7 @@ temp = aim_1_2 %>%
 temp
 ```
 
-Next we perform visualizations on the same numbers we just got above and present the data in form of bar graphs with the help of `ggplot2` package and used `geom_bar` to plot the graph grouped by Prior.Treatment and have six graphs for six different `Center.of.sequencing` institutes. Furthermore, to plot the graph, we use the `janitor` and `dplyr` packages to store the tables based on these three variables. 
+The table indicates that the samples are not equally distributed for each region with more being centered among the Midwest and West Coast, as was mentioned previously. Moreover, affected individuals were shown more likely to have not received prior taxane treatment given by the larger quantities shown on the bottom row of the table. Following this numeric summary analysis we  performed  a visual summary of the numbers we acquired above. We created bar graphs with the help of the `ggplot2` package and used `geom_bar` to plot the graph grouped by `Prior.Treatment`. This produced six different graphs for each of the `Center of Sequencing` institutes. Furthermore, to plot the graph, we used the `janitor` and `dplyr` packages to store the tables based on these three variables. 
 
 ```{r warning=FALSE}
 library(janitor)
@@ -504,7 +503,7 @@ ggplot(my.summary.region, aes(Exposure.Status, n, fill = Prior.Treatment)) +
   facet_wrap(facets = vars(Site_region))
 ```
 
-As seen in the graphs and tables, the distribution seems to be not normal and hence we decided to perform Fisher's exact test to calculate the p-value. We see that the p-value is less than 0.001, which means it is statistically significant across all confidence levels and hence there is an significant association between Sequencing Site and Exposure Status. Similarly we also get p-value less than 0.001 for Prior Treatment status and Exposure Status (using Pearson's Chi-Squared test), which means there is a statistically significant association between exposure status/sequencing site and exposure status/prior treatment status.   
+As seen in the graphs and tables, the distribution seems to be not normal and hence we decided to perform a `Fisher's exact test` to calculate the p-value. We see that the p-value is less than 0.001, which means it is statistically significant across all confidence levels and hence there is an significant association between `Sequencing Site` and `Exposure Status`. Similarly we also received a  p-value less than 0.001 for `Prior Treatment status` and `Exposure Status` (using `Pearson's Chi-Squared test`), which means there is a statistically significant association between exposure status/sequencing site and exposure status/prior treatment status.   
 
 ```{r}
 # Create numeric summary comparing exposure status to sequencing site and prior 
@@ -522,25 +521,25 @@ p.test = aim_1_2 %>%
 p.test
 ```
 
-Now that we have completed our analysis for Aim 1, we can conclude that exposure status has shown evidence of associaiton with prior treatment status (Taxane treatment) and sequencing site, and that sequencing site does not seem to be associated with severity of tumor content. 
+Now that we have completed our analysis for Aim 1, we can conclude that exposure status has shown evidence of association with prior treatment status (Taxane treatment) and sequencing site, and that sequencing site does not seem to be associated with severity of tumor content. 
 
 # Aim 2
 
 ## Aim 2.1 - Assign classifications of “high”, “medium” or “low” based on the intensity of mutation count
 
-For Aim 2, we will be creating a mutation count classification system similar to the one made and utilized in Aim 1. To assess how we should divide the counts into "high", "medium", and "low", lets first look at the distribution of Mutation Count:
+For Aim 2, we created a mutation count classification system similar to the one made and utilized in Aim 1. To assess how we should divide the counts into "high", "medium", and "low", we first looked at the distribution of Mutation Count:
 ```{r}
 finaldata<-remove_nonuniques
 summary(finaldata$Mutation.Count)
 ```
 
-Based off of the summary above, we can divide the mutation count into the following levels of severity:
+Based off of the summary above, we divided the mutation count into the following levels of severity:
 
-Low Mutation Count: 0-55 mutations
-Medium Mutation Count: 56-110 mutations
-High Mutation Count: >110 mutations
++**Low Mutation Count**: 0-55 mutations
++**Medium Mutation Count**: 56-110 mutations
++**High Mutation Count**: >110 mutations
 
-Now, lets add this severity classification to our data frame using our tried and true if-else statement and summarize the frequencies of mutation count severity levels:
+Then we added this severity classification to our data frame using our tried and true `if-else` statement and summarized the frequencies of mutation count severity levels:
 ```{r}
 # low = 0 - 55
 # med = 56 - 110
@@ -556,11 +555,11 @@ table(finaldata$mu_class)
 
 ```
 
-Now that we have summarized the frequencies of mutation count severity levels, we can plot the frequencies in relation to biopsy sites.
+After we summarized the frequencies of mutation count severity levels, we plotted the frequencies in relation to biopsy sites.
 
-For plotting the severity on a human graph we can use the package `gganatogram`, which is a package based on ggplot2 and allows for better visualization of organs and tissues. Here, we will be displaying mutation count data onto anatomical structures from the package. Essentially, we will be grouping our data set by biopsy site, and then calculating the mean mutation count for each site, and then use our mutation count classification system to set an appropriate value for visualizing the spread of severity across biopsy sites.
+For plotting the severity on a human graph we used the package `gganatogram`, which is a package based on `ggplot2` and allows for better visualization of organs and tissues. Here, we overlaid mutation count data onto anatomical structures from the package. Essentially, we grouped our data set by biopsy site, and then calculated the mean mutation count for each site, and finally used our mutation count classification system to set an appropriate value for visualizing the spread of severity across biopsy sites.
 
-First we need to construct a data frame by renaming the biopsy sites exactly as built in the package `gganatogram`. Then, we can assign each tumor site a value corresponding to the severity level that matches the mutation count levels.
+First we constructed a data frame by renaming the biopsy sites exactly as built in the package `gganatogram`. Then, we assigned each tumor site a value corresponding to the severity level that matched the mutation count levels.
 
 ```{r}
 # Download all our gganatogram packages 
@@ -574,13 +573,13 @@ finaldata %>%
   group_by(Tumor.Site) %>%
   summarise(mean(Mutation.Count))
 ```
-We've successfully calculated the avergae mutation count for each biopsy site! Now, we can start the process to plot these on a human graph. First, note that the ranges for mutation count are much more variable that tumor content. Good thing we created a classification system for this! To ensure that our color scale doesn't range from 0-1000 mutations, which would cause most of the biopsy sites to be colored the same shade since majority of them would be on the lower end of the scale, we can utilize our classification system to normalize our mutation count values to a certain extent. 
+We successfully calculated the average mutation count for each biopsy site! Next, we can  plot these on a human graph. First, note that the ranges for mutation count are much more variable than that of tumor content. Good thing we created a classification system for this! To ensure that our color scale didn't range from 0-1000 mutations, which would cause most of the biopsy sites to be colored the same shade since majority of them would be on the lower end of the scale, we utilized our classification system to normalize our mutation count values to a certain extent. 
 
-In the section below, we create a data frame that is formatted for the gganatogram package. It contains two columns -- organ and value. Organ is the biopsy site, and value is the mutation count (note that the columns must be named like this in order to be fed into gganatogram). 
+In the section below, we created a data frame that is formatted for the `gganatogram` package. It contains two columns -- `organ` and `value`. Organ is the biopsy site, and value is the mutation count (note that the columns must be named like this in order to be fed into `gganatogram`). 
 
-To normalize the mutation count values, we will manually check which level of mutation each relevant biopsy site matches to, and then set that biopsy site's value to the maximum value of that level's range. For example, lymph node's mutation count average is 101, which falls into the medium severity level, which ranges from 56 to 110, so lymph node's value in our data frame will be 110. 
+To normalize the mutation count values, we manually checked which level of mutation each relevant biopsy site matched to, and then set that biopsy site's value to the maximum value of that level's range. For example, lymph node's mutation count average was 101, which falls into the medium severity level, which ranges from 56 to 110, so lymph node's value in our data frame would be 110. 
 
-It is also worth noting that we can only plot the biopsy sites which are included in gganatogram's `hgMale_key` data frame due to the way the package works, but for the purposes of data wrangling we figured including the package and all it's visually helpful plots is worth the loss of a couple of sites not included in the library. 
+It is also worth noting that we could only plot the biopsy sites which were included in gganatogram's `hgMale_key` data frame due to the way the package works. Hence, we included the package and all it's visually helpful plots with the loss of a couple of sites not included in the library just for the purposes of data wrangling. 
 ```{r}
 # For reference, here is our mutation count classification system
 # low = 0 - 55
@@ -602,11 +601,11 @@ temp_works <-gganatogram(data = biopsies, organism="human", sex="male",
 temp_works
 
 ```
-Wow! We just made our first human plot that looks at mutation count severity levels by biopsy site! Thanks, `gganatogram`! As we can see from above the penis, bone, heart, and stomach biopsy sites seem to have the highest mutation count. This could be useful to look into in further studies to see if there could be any clinical implications in this area. 
+Wow! We just made our first human plot that looks at mutation count severity levels by biopsy site! Thanks, `gganatogram`! As evidenced in the plot, the penis, bone, heart, and stomach biopsy sites seem to have the highest mutation count. This could be useful in discerning which areas the care team should focus on in follow up treatments along with monitoring of cancer progression.  
 
 ## Aim 2.2
 
-This data set included a recording of patient exposure to Abiraterone and Enzalutamide (ABI and ENZA). ABI and ENZA are drugs commonly used in the treatment of prostate cancer. Both medications work as an anti-androgen drugs; ABI is an androgen synthase inhibitor, and ENZA inhibits androgen processes in the cell. Close to half of the participants in the study were either exposed or not exposed to ABI and ENZA in the fashion of a randomized control trial. In this aim we are trying to see if the participants in each arm of the study (exposed or not exposed) share similar characteristics, particularly among the Mutation Count, Fraction Genome Altered, and Tumor Content variables. To explore these characteristics of the data set, the data must first be split into those rows corresponding to participants who were exposed to ABI and ENZA and those who were not. 
+This data set included a recording of patient exposure to `Abiraterone and Enzalutamide (ABI and ENZA)`. ABI and ENZA are drugs commonly used in the treatment of prostate cancer. Both medications work as an anti-androgen drugs; ABI is an androgen synthase inhibitor, and ENZA inhibits androgen processes in the cell. Close to half of the participants in the study were either exposed or not exposed to ABI and ENZA in the fashion of a randomized control trial. In this aim we are trying to see if the participants in each arm of the study (exposed or not exposed) share similar characteristics, particularly among the `Mutation Count`, `Fraction Genome Altered`, and `Tumor Content` variables. To explore these characteristics of the data set, the data must first be split into those rows corresponding to participants who were exposed to ABI and ENZA and those who were not. 
 
 ```{r}
 #Convert exposure status to numeric binary variable.
@@ -677,18 +676,18 @@ amc %>%
     
 ```
 
-These visualizations and results show that the groups differ by values that are reasonably expected under random chance. We performed a Welch's two sample t-test (which assumes unequal variances between exposure arms), and obtained p-values of 0.5 (mutation count), 0.12 (fraction genome altered), and 0.6 (tumor content). These values all suggest that there is no association between exposure status and mutation count, fraction genome altered, and tumor content.
+These visualizations and results show that the groups differ by values that are reasonably expected under random chance. We performed a `Welch's two sample t-test` (which assumes unequal variances between exposure arms), and obtained p-values of 0.5 (mutation count), 0.12 (fraction genome altered), and 0.6 (tumor content). These values all suggest that there is no association between exposure status and mutation count, fraction genome altered, and tumor content.
 
 
 ## Aim 2.3- Is Severity of Mutation Count Related to Frequency of Biopsy Sites?  
 
-To finish off aim 2, we will be checking if severity of Mutation Count is associated with frequency of biopsy sites sampled in the first data set. Let's first create a data frame that stores the frequency of each biopsy site from our data set:
+To finish off aim 2, we checked if severity of Mutation Count was associated with frequency of biopsy sites sampled in the first data set. We created a data frame that stored the frequency of each biopsy site from our data set:
 ```{r}
 # Frequencies of biopsy site in first data set
 aim_2_3 = data.frame(table(finaldata$Tumor.Site))
 aim_2_3
 ```
-Now we can once again use the `gganatogram` package to plot the frequencies of each biopsy site on a human outline. Note, that since the package is picky about which organs we can use, we must once again manually create a data frame with relevant "organs" for the package's plotting function and manually include the values (in this case, the frequency of the biopsy site):
+Next we utilized the `gganatogram` package once again to plot the frequencies of each biopsy site on a human outline. Note, that since the package is picky about which organs we can use, we had to manually create a data frame with relevant "organs" for the package's plotting function and manually include the values (in this case, the frequency of the biopsy site):
 ```{r}
 # Create data frame for plotting frequencies of biopsy site
 biopsies <- data.frame(organ = c("lymph_node", "prostate", "liver", "penis", 
@@ -703,18 +702,18 @@ p2 <-gganatogram(data = biopsies, organism="human", sex="male",
                        midpoint = .02)
 p2
 ```
-Now that we have created two human plots -- one for mutation count severity by biopsy site, and one for frequency of each biopsy site from our data set, we can compare the two side-by-side:
+After creating two human plots -- one for mutation count severity by biopsy site, and one for frequency of each biopsy site from our data set, we compared the two side-by-side:
 ```{r}
 #Compare tumor content severity for biopsy site to frequency for each biopsy site
 lay <- rbind(c(1,2), c(1,2))
 grid.arrange(temp_works, p2, layout_matrix = lay)
 ```
-Now that we can compare severity of tumor content directly next to frequency of biopsy site, we can visually assess any possible correlation between the two. After comparing the two side-by-side, we can see that there does not seem to be any association between tumor content severity at a biopsy site and how frequently that biopsy site was sampled in this data set. And with that, we can complete our analysis for Aim 2!
+Next we compared severity of tumor content directly next to frequency of biopsy site to  visually assess any possible correlation between the two. Comparing the two side-by-side revealed that there was no association between tumor content severity at a biopsy site and how frequently that biopsy site was sampled in this data set. And with that, we conclude our analysis for Aim 2!
 
 # BONUS AIM
 The last aim checks for an association between diagnosis age and tumor site. According to the Cleveland Clinic 1 in 6 men will be diagnosed with prostate cancer during the course of their lifetime. Research from the American Cancer Society suggests that 6 out of 10 cases of prostate cancer are diagnosed among men 65 years or older. As mentioned previously the mean age of diagnosis among this prospective cohort was 67 years of age. Prior research suggests that as men get older their risk of being diagnosed with prostate cancer increases. In addition, the publication in Cell suggests that bone tumors are the most common site of metastatic disease. This aim therefore intends to determine whether these two prior notions hold true among the data in question. 
 
-To conduct the analysis we subset the data columns Diagnosis.Age and Tumor.Site into a dataframe called age_tumor. The numeric index of these columns was 4 and 11 respectively. Before proceeding with any analysis we conducted an exploratory investigation to understand the quantity of unique tumor sites present in the data set along with the spread of age at diagnosis.
+To conduct the analysis we subset the data columns `Diagnosis.Age` and `Tumor.Site` into a dataframe called `age_tumor`. The numeric index of these columns was 4 and 11 respectively. Before proceeding with any analysis we conducted an exploratory investigation to understand the quantity of unique tumor sites present in the data set along with the spread of age at diagnosis.
 
 ```{r}
 age_tumor <- remove_nonuniques[c(4,11)] #subset the data 
@@ -722,13 +721,13 @@ head(age_tumor)
 summary(unique(age_tumor$Tumor.Site)) #look at unique values for tumor.site 
 ```
 
-According to the aforementioned summary and unique command, 20 unique tumor sites are present within this data. Next, we explored the distribution of diagnosis age to determine min, max, mean and median ages for this prospective prostate cohort. 
+According to the aforementioned `summary` and `unique` command, 20 unique tumor sites are present within this data. Next, we explored the distribution of diagnosis age to determine min, max, mean and median ages for this prospective prostate cohort. 
 
 ```{r}
 summary(age_tumor$Diagnosis.Age)
 ```
 
-Given the minimum age at diagnosis was 40 and the maximum age at diagnosis was 85 we needed to come up with a way to age-stratify the data in order to compare the various tumor sites with age at diagnosis. TAn article published in the [British Journal of Cancer](https://www.nature.com/articles/bjc2013268#Tab1) described a methodology for stratifying age within a population based study investigating prostate cancer. The researchers stratified age according to the following groups "40-59", "60-69", "70-79" and "80+ years". Since this was a validated study we employed the same age-stratified bins for our analysis. 
+Given the minimum age at diagnosis was 40 and the maximum age at diagnosis was 85 we needed to come up with a way to age-stratify the data in order to compare the various tumor sites with age at diagnosis. An article published in the [British Journal of Cancer](https://www.nature.com/articles/bjc2013268#Tab1) described a methodology for stratifying age within a population based study investigating prostate cancer. The researchers stratified age according to the following groups "40-59", "60-69", "70-79" and "80+ years". Since this was a validated study we employed the same age-stratified bins for our analysis. 
 
 Using the `tidyverse` package we employed several `ifelse` statements to group the ages into the various aforementioned age strata. All values were grouped into their respective bins with the final clause indicating that values that did not fall into these specified ranges should be classified as `NA`. 
 
@@ -758,7 +757,7 @@ age_tumor %>%
   add_p(test=everything()~"kruskal.test") #test for the differences among ranks 
 ```
 
-As evidenced by the output of the table, several of the aggregate counts of tumors by site were either 0 or 1 in most cases, which is not that significant. Five sites however did demonstrate counts greater than 1 and those include, Bone, Liver, Lymph Node, Prostate and Soft Tissue. To assess whether the differences among the age stratified ranks were significant by tumor site we conducted a Kruskal-Wallis Rank Sum Test. The output of which can be found in the last column of this table. The value of p was reported as 0.9 and assuming an alpha significance level of 0.05 this value is not significant. Thus, we conclude that there is no significant difference exhibited among the age stratified ranks by tumor site. 
+As evidenced by the output of the table, several of the aggregate counts of tumors by site were either 0 or 1 in most cases, which is not that significant. Five sites however did demonstrate counts greater than 1 and those include, `Bone`, `Liver`, `Lymph Node`, `Prostate` and `Soft Tissue`. To assess whether the differences among the age stratified ranks were significant by tumor site we conducted a `Kruskal-Wallis Rank Sum Test`. The output of which can be found in the last column of this table. The value of p was reported as 0.9 and assuming an alpha significance level of 0.05 this value is not significant. Thus, we conclude that there is no significant difference exhibited among the age stratified ranks by tumor site. 
 
 We found the quantities of the aggregate counts for the following tumor sites: Bone, Liver, Lymph Node, Prostate and Soft Tissue to be interesting so we further subsetted the data to explore the distribution of tumors. Additionally, we wanted to further assess whether bone, as mentioned earlier, was indeed the site of greatest metastatic disease. 
 
@@ -891,15 +890,15 @@ The link can be found [here.](https://portal.gdc.cancer.gov/exploration?cases_si
 ## Excel Cleaning for Second Data Set 
 The GDC portal website provided both a cleaned and uncleaned version of their prostrate cancer data. The cleaned data mirrors what can be found on their visualization dashboard describing 493 patients with 24 data points while the uncleaned  version contains many more clinical parameters such as clinical stages of the tumor, days to last follow up, and treatment. Both GDC datasets are more robust in their capture of the clinical parameters related to prostate cancer in contrast with the cBioPortal data previously analyzed. This indicates that since 2015 when the Cell paper was published, the observation and recording of tumor data related to prostrate cancer has significantly increased allowing researchers to provide more insight into the manifestation of disease. For this portion of our analysis we downloaded both datasets as we were interested in wrangling the data and discerning the overlap between the two datasets. We first started by cleaning the clinical data set with the abundance of parameters.   
 
-The data was downloaded as a TSV file so it needed to be imported into Excel to change the format to a CSV or .XLSX file. The raw data contained  960 rows and 156 columns. Upon further investigation it was evident that several of the columns were empty or had values missing. In order to determine the columns with no data present along with those which had missing values we used the Filter tool in Excel. Missing values were those marked as '-- in the cells. We developed a key for the missing values called "Key for Missing Values Columns". 
+The data was downloaded as a TSV file so it needed to be imported into Excel to change the format to a CSV or .XLSX file. The raw data contained  960 rows and 156 columns. Upon further investigation it was evident that several of the columns were empty or had values missing. In order to determine the columns with no data present along with those which had missing values we used the Filter tool in Excel. Missing values were those marked as '-- in the cells. We developed a key for the missing values called `Key for Missing Values Columns`. 
 
-Based on the assessment where we developed the key of the missing values we determined that the raw data contained 112 empty columns for which no data was available and 33 columns with missing values. The 112 empty columns were then removed from the analysis by simple deletion in Excel and a new sheet was created, "Sample". This new sheet "Sample" contained 44 columns. 
+Based on the assessment where we developed the key of the missing values we determined that the raw data contained 112 empty columns for which no data was available and 33 columns with missing values. The 112 empty columns were then removed from the analysis by simple deletion in Excel and a new sheet was created, `Sample`. This new sheet `Sample` contained 44 columns. 
 
-Further investigation of the new "Sample" data indicated that some rows were shifted over particularly rows 141, 142, 206, 207, 284, 285, 494 and 495. We pinpointed the origin of the shift for the aforementioned rows to column Y. In order to account for this shift we copied the data from the "Sample" worksheet to a new sheet called "Sample Revised". Here we inserted a cell in column Y for each of the aforementioned rows to shift the values of the cells to the the right so that the cells would be associated with the correct column. 
+Further investigation of the new `Sample` data indicated that some rows were shifted over particularly rows 141, 142, 206, 207, 284, 285, 494 and 495. We pinpointed the origin of the shift for the aforementioned rows to column Y. In order to account for this shift we copied the data from the `Sample` worksheet to a new sheet called `Sample Revised`. Here we inserted a cell in column Y for each of the aforementioned rows to shift the values of the cells to the the right so that the cells would be associated with the correct column. 
 
-Similarly the "treatment_type" column values were shifted to the right but also broken up into values of "Radiation Therapy/Pharmaceutical Therapy" and "NOS". To fix this issue we concatenated the values for the therapy and NOS in a new column, column AS. We then named this column "treatment_type".
+Similarly the `treatment_type` column values were shifted to the right but also broken up into values of `Radiation Therapy/Pharmaceutical Therapy` and `NOS`. To fix this issue we concatenated the values for the therapy and NOS in a new column, column AS. We then named this column `treatment_type`.
 
-After concatenating the values we copied the data from "Sample Revised" to a new worksheet called "cleaned_sample". In this dataset we noticed that after shifting the rows five columns were shown to be empty. Thus we removed the five columns: secondary_gleason_grade, synchronous_malignancy, tumor_grade, year_of_diagnosis and treatment_or_therapy.  We exported this data as a CSV file to then continue our analysis of the missing values in R.
+After concatenating the values we copied the data from `Sample Revised` to a new worksheet called `cleaned_sample`. In this dataset we noticed that after shifting the rows five columns were shown to be empty. Thus we removed the five columns: `secondary_gleason_grade`, `synchronous_malignancy`, `tumor_grade`, `year_of_diagnosis` and `treatment_or_therapy`.  We exported this data as a CSV file to then continue our analysis of the missing values in R.
 
 For our final Excel file with the metadata and the various sheets please refer to our GitHub repository. You will find the .xlsx file under the title `clinical data from NCI`.
 
@@ -940,16 +939,15 @@ dim(temp.NA)
 dim(temp.NA1)
 ```
 
+By subsetting the rows from the `temp.NA` dataframe we removed 26 rows in which `NA` values were present across the three afroementioned columns. The `NA` values that are now left are column dependent rather than case dependent. Several `NA` values still remain however simply removing the columns is not effective given that those values that are populated within the column are important. For instance the majority of the `days to death` column is populated with `NA` values however lines 131 and 132 have the value `146` for the days of death. This is important information in determining how many days elapsed between diagnosis and death. 
 
-BY subsetting the rows from the `temp.NA` dataframe we removed 26 rows in which `NA` values were present across the three afroementioned columns. The `NA` values that are now left are column dependent rather than case dependent. Several `NA` values still remain however simply removing the columns is not effective given that those values that are populated within the column are important. For instance the majority of the `days to death` column is populated with `NA` values however lines 131 and 132 have the value `146` for the days of death. This is important information in determining how many days elapsed between diagnosis and death. 
-
-To further visually explore the relationship between the missing variables and their respective CaseIDs we created a matrixplot using the package `VIM`. This graph shows black and white variables indicating the values present in each column followed by red demarcations indicating the missing variables. Notice the three red columns highlighted here. They correspond to `days to death`, `year of death`, and `treatment type`. Many columns towards the middle of the graph also seem to highlight several missing values. Those columns correspond to ratings for the clinical cancer stage of tumors, regional nodes and metastases. As demonstrated by this graph those three columns `days to death`, `year of death`, and `treatment type` uniformly are shown to have missing values however the clinical cancer stage columns intermittently illustrate missing values relative to each respective CaseID. 
+To further visually explore the relationship between the missing variables and their respective `CaseIDs` we created a matrixplot using the package `VIM`. This graph shows black and white variables indicating the values present in each column followed by red demarcations indicating the missing variables. Notice the three red columns highlighted here. They correspond to `days to death`, `year of death`, and `treatment type`. Many columns towards the middle of the graph also seem to highlight several missing values. Those columns correspond to ratings for the clinical cancer stage of tumors, regional nodes and metastases. As demonstrated by this graph those three columns `days to death`, `year of death`, and `treatment type` uniformly are shown to have missing values however the clinical cancer stage columns intermittently illustrate missing values relative to each respective `CaseID`. 
 
 ```{r}
 library(VIM)
 matrixplot(temp.NA1,sortby=1)
 ```
-We further investigated how one of the columns illustrated above with the missing values compared to CaseID. Using the `VIM` package again we created a margin plot to observe how the missing values in `days to last folluw up` (column 20) compared with each case. As depicted below, the column had 16 missing values with a fairly random scatter for the observed values shown in blue. The red values however seem to be concentrated towards the earlier and latter cases with the distribution being skewed for the red boxplot, in contrast to the blue boxplot for CaseID.  
+We further investigated how one of the columns illustrated above with the missing values compared to CaseID. Using the `VIM` package again we created a margin plot to observe how the missing values in `days to last follow up` (column 20) compared with each case. As depicted below, the column had 16 missing values with a fairly random scatter for the observed values shown in blue. The red values however seem to be concentrated towards the earlier and latter cases with the distribution being skewed for the red boxplot, in contrast to the blue boxplot for `CaseID`.  
 
 ```{r}
 marginplot(temp.NA1[,c(1,20)])
@@ -1016,7 +1014,7 @@ joined_data <- sqldf("SELECT *
 dim(joined_data)
 ```
 
-Fifty-nine data points is A LOT of data. Before proceeding with our SQL additions we perused this new data sample. We noticed many columns for which the same value was contained within every row of the column so we employed the same `find nonuniques` custom function from our earlier cleaning of cBioPortal to remove the columns where the data was repeated. 
+Fifty-nine data points is A LOT of data. Before proceeding with our SQL additions we perused this new data sample. We noticed many columns for which the same value was contained within every row of the column so we employed the same `find nonuniq` custom function from our earlier cleaning of cBioPortal to remove the columns where the data was repeated. 
 
 ```{r}
 repeat_cols <- find_nonuniq(joined_data)
@@ -1067,16 +1065,17 @@ Lastly, we couldn't let our beautiful analyses go to waste so we created a simpl
 knitr::include_graphics("~/Desktop/Data-Wrangling-Project/Dashboard.png")
 ```
 
-
 # CONCLUSION
 
 ## Summary
-Our analysis aimed to understand the associations between patient characteristics and severity of prostate cancer through various data wrangling procedures we learned throughout the quarter. After utilizing three platforms for our cleaning and wrangling processes (R, SQL, and Excel), and creating numerical summaries along with visual representations of our data through R packages such as gtsummary and ggplot, we have come to the following conclusions:
+Prior to 2015, data on tumor biopsies of prostrate cancer was limited due to restrictions in the collection of tumors from affected individuals. Our analysis aimed to understand the associations between individual case presentation and the manifestation of disease with the hopes of facilitating greater downstream analysis of prostate cancer cohorts. In addition we aimed to explore the differences in datasets available from 2015 into 2016 regarding prostate cancer particularly the differences in variables collected and findings observed. We hope our methods of data wrangling employed as part of this project can be added to the growing repository of analytic techniques used in prostate cancer research.
 
-  1. After performing a Chi-squared test on the relationships between geographic location and severity of tumor content (%), the data set provides no        evidence of association between geographic location and severity of tumor content (%).
-  2. After running a Fisher's exact test (for Sequencing Site) and a Pearson's Chi Squared test (Prior Treatment Status), there is evidence of a             statistically significant association between Sequencing Site and Exposure Status along with Prior Treatment Status and Exposure Status. 
-  3. As men age, incidence of prostate cancer increases with metastasis of disease occurring more frequently in the lymph nodes and bone. 
-  4. From visual assessments, there does not seem to be an association between exposure status and mutation group, fraction of genome altered, or tumor      content.
+We utilized various patient characteristics to examine their relation to severity of prostate cancer through several data wrangling procedures we learned throughout the quarter. After utilizing three platforms for our cleaning and wrangling processes (R, SQL, and Excel), and creating numerical summaries along with visual representations of our data through R packages such as `gtsummary` and `ggplot2`, we have come to the following conclusions:
+
+  1. After performing a Chi-squared test on the relationships between geographic location and severity of tumor content (%), the data set provides no evidence of association between geographic location and severity of tumor content (%).
+  2. After running a Fisher's exact test (for Sequencing Site) and a Pearson's Chi Squared test (Prior Treatment Status), there is evidence of a statistically significant association between Sequencing Site and Exposure Status along with Prior Treatment Status and Exposure Status. 
+  3. After executing a Kruskal Wallis Rank Sum Test  the data provides no evidence of association between tumor site and age at diagnosis. However as illustrated by the visual summary, as men age, incidence of prostate cancer increases with metastasis of disease occurring more frequently in the lymph nodes and bone. 
+  4. From visual assessments, there does not seem to be an association between exposure status and mutation group, fraction of genome altered, or tumor content.
 
 ## Next Steps
 
@@ -1132,7 +1131,7 @@ grid.arrange(conc_hist1, conc_hist2, layout_matrix = lay)
 
 ```
 
-The first thing we noticed is that these graphs are slightly misleading since we are looking at frequencies instead of proportions. The cBioPortal data set frequencies range from 0-40, while the GDC data set frequencies range from 0 to >200. Let's try to make these graphs more comparable. 
+The first thing we noticed is that these graphs are slightly misleading since we are looking at frequencies instead of proportions. The cBioPortal data set frequencies range from 0-40, while the GDC data set frequencies range from 0 to >200. Therefore, we must make these graphs more comprable. 
 
 ```{r}
 # Make proportions
@@ -1165,14 +1164,17 @@ lay <- rbind(c(1,2), c(1,2))
 grid.arrange(conc_hist3, conc_hist4, layout_matrix = lay)
 
 ```
-Great! Now that we have the proportions and equal y axis ranges, we can see that the gap between having prior treatment versus no prior treatment is relatively smaller in the patients from the first data set compared to patients from the second data set. Additionally, the proportion of patients who received prior treatment in the first data set seems to be higher across all age groups compared to the second data set. 
+Once we set the proportions and equal y axis ranges, we noticed that the gap between having prior treatment versus no prior treatment was relatively smaller in the patients from the first data set compared to patients from the second data set. Additionally, the proportion of patients who received prior treatment in the first data set seems to be higher across all age groups compared to the second data set. 
 
-This would be a great place to start further analysis if we had more time. We could look more into how prior treatment affects diagnosis age, if prior treatment has been linked to later diagnosis age, and where we would be able to find more data to test this association. One thing to note is that the first data set's patients were specifically studied on prior Taxane treatment, while the patients in the second data set did not have a specific treatment mentioned. So, we could also look at Taxane treatment effectiveness in preventing prostate cancer versus other treatments. In addition to investigating diagnosis age's relationship to prior treatment status, we had also noticed that the second data set had a "vital status" column which gives us information on the survival status of the patient. This information was missing from our first data set, so another great next step would be to track the incidence of disease in our second data set (from GDC), and by using our vital status column, we would calculate the patient mortality ratio for the GDC data set. 
+This would be a great place to start further analysis if we had more time. We could further investigate  how prior treatment affects diagnosis age, if prior treatment has been linked to later diagnosis age, and where we would be able to find more data to test this association. One thing to note is that the first data set's patients were specifically studied on prior Taxane treatment, while the patients in the second data set did not have a specific treatment mentioned. So, we could also look at Taxane treatment effectiveness in preventing prostate cancer versus other treatments. In addition to investigating diagnosis age's relationship to prior treatment status, we had also noticed that the second data set had a "vital status" column which gives us information on the survival status of the patient. This information was missing from our first data set, so another great next step would be to track the incidence of disease in our second data set (from GDC), and by using our vital status column, we would calculate the patient mortality ratio for the GDC data set. 
 
 
 ## Limitations
-Though we were able to derive several conclusions from our data sets, there were a few limitations we faced. For starters, the data set we got from cBioPortal did not have well-defined variables or information on certain variables were calculated, what the units of measurements were, etc. For example, we initially struggled to find information on how tumor content and mutation count were measured, what the units of measurements were, and what ranges of each measurement were considered significant. When we tried to do some background research through search engines such as Google, we weren't able to find any helpful information, which leads us to our second limitation: prostate cancer data is very niche, and there were not many resources readily available for us to use to get a better understanding on some of the variables we were dealing with. Nevertheless, after reading through the data set's attached paper for understanding tumor content and looking at other academic papers to better understand how mutation count works, we were able to successfully interpret our variables of interest.
+Though we were able to derive several conclusions from our data sets, there were a few limitations we faced. For starters, the data set we got from cBioPortal did not have well-defined variables or information on certain variables were calculated, what the units of measurements were, etc. For example, we initially struggled to find information on how tumor content and mutation count were measured, what the units of measurements were, and what ranges of each measurement were considered significant. During our investigation for background research, search engines such as Google weren't helpful. This leads us to our second limitation: prostate cancer data is very niche, and there were not many resources readily available for us to use to get a better understanding on some of the variables we were dealing with. Nevertheless, after reading through the data set's attached paper for understanding tumor content and looking at other academic papers to better understand how mutation count works, we were able to successfully interpret our variables of interest.
+
+Additionally, for the GDC portal we did not have equal sample sizes among the age groups. In fact most of the affected individuals fell within the "60-69" and "70-79" age group indicating a skew in the distribution. More data on individuals older than 79 years old would be helpful in studying the incidence of disease and the prevalence of tumors across different sites. 
 
 ## Looking Forward - Clinical Implications
-If we were to use our analysis to make conclusions about the clinical implications of the prostate cancer data we analyzed throughout this project, our first piece of advice would be to further study associations between sequencing site and exposure status, along with prior treatment status and exposure status since we obtained significant results when studying these associations. Additionally, it would be worth looking into how age plays into certain factors such as prior treatment status and tumor site.
+If we were to use our analysis to make conclusions about the clinical implications of the prostate cancer data we analyzed throughout this project, our first piece of advice would be to further study associations between sequencing site and exposure status, along with prior treatment status and exposure status since we obtained significant results when studying these associations. Perhaps these findings could relate to geographic or environmental components causing a higher incidence of prostate cancer in these sequencing site regions. Additionally, it would be worth looking into how age plays into certain factors such as prior treatment status and tumor site. Average age of diagnosis with prostate cancer is 66. One would thus expect the "60 to 69" age group to demonstrate the highest frequency of tumors however, our data suggest the "70 to 79" year olds are demonstrating the greatest amount of tumors. We would therefore suggest from our findings that affected individuals falling within the "70 to 79" age group should be monitored more closely for prostate cancer. Additionally tumor sites such as lymph nodes and liver should be monitored along with bone as they to seem to present with greater metastases. 
+
 
