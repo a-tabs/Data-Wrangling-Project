@@ -708,7 +708,7 @@ After creating two human plots -- one for mutation count severity by biopsy site
 lay <- rbind(c(1,2), c(1,2))
 grid.arrange(temp_works, p2, layout_matrix = lay)
 ```
-Next we compared severity of tumor content directly next to frequency of biopsy site to  visually assess any possible correlation between the two. Comparing the two side-by-side revealed that there was no association between tumor content severity at a biopsy site and how frequently that biopsy site was sampled in this data set. And with that, we conclude our analysis for Aim 2!
+As shown above, comparing the two plots side-by-side revealed that there was no association between mutation count severity at a biopsy site and how frequently that biopsy site was sampled in this data set. And with that, we conclude our analysis for Aim 2!
 
 # BONUS AIM
 The last aim checks for an association between diagnosis age and tumor site. According to the Cleveland Clinic 1 in 6 men will be diagnosed with prostate cancer during the course of their lifetime. Research from the American Cancer Society suggests that 6 out of 10 cases of prostate cancer are diagnosed among men 65 years or older. As mentioned previously the mean age of diagnosis among this prospective cohort was 67 years of age. Prior research suggests that as men get older their risk of being diagnosed with prostate cancer increases. In addition, the publication in Cell suggests that bone tumors are the most common site of metastatic disease. This aim therefore intends to determine whether these two prior notions hold true among the data in question. 
