@@ -5,6 +5,8 @@ date: "11/16/2021"
 output:
   pdf_document: default
   html_document: default
+urlcolor: blue
+linkcolor: blue
 ---
 
 ```{r setup, include=FALSE}
